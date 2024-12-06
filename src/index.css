@@ -15,20 +15,15 @@ body {
   }
 }
 
-
 @layer components {
-
   .splash-screen {
     position: fixed;
     width: 100vw;
     height: 100vh;
-    background-image: url('src/assets/images/splashscreen.png'); /* Add your background image here */
+    background-image: url("src/assets/images/splashscreen.png"); /* Add your background image here */
     background-size: cover;
-    background-position: contain;
+    background-position: cover;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
+   
   }
-  
 }

@@ -6,6 +6,9 @@ export default {
       fontFamily: {
         cairo: ["Cairo-Regular", "sans-serif"],
       },
+      colors: {
+        primaryText: "#F2E7D4",
+      },
     },
   },
   plugins: [],
