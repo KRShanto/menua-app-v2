@@ -1,4 +1,3 @@
-import React from "react";
 import AlBaharat from "../assets/icons/albaharat.svg?react";
 const SplashScreen = () => {
   return (
