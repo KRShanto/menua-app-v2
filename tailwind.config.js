@@ -8,6 +8,8 @@ export default {
       },
       colors: {
         primaryText: "#F2E7D4",
+        backgroundColor: "#343436",
+        foregroundColor: "#F2E7D4",
       },
     },
   },
