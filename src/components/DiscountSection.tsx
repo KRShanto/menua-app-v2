@@ -74,40 +74,40 @@ export default function DiscountSection() {
   return (
     <div>
       {discountData.map((discount, index) => (
-        <div key={index} className="p-4 ">
+        <div key={index} className="p-4">
           {/* Discount Title */}
-          <h2 className="text-xl  text-foregroundColor flex items-center gap-2">
+          <h2 className="flex items-center gap-2 text-xl text-foregroundColor">
             <FaFire />
             {discount.name}
           </h2>
 
           {/* Item List */}
-          <ul className="flex gap-3 overflow-x-scroll mt-2">
+          <ul className="mt-2 flex gap-3 overflow-x-scroll">
             {discount.items.map((item, index) => (
               <li key={index} className="relative min-w-[16rem]">
                 <img
                   src={item.image}
                   alt={item.name}
-                  className="w-full h-1/2 rounded-tl-xl rounded-tr-xl"
+                  className="h-1/2 w-full rounded-tl-xl rounded-tr-xl"
                 />
-                <div className=" bg-[#1F1F20] h-1/2 p-4 rounded-bl-xl rounded-br-xl ">
-                  <h3 className="text-lg  text-foregroundColor">{item.name}</h3>
-                  <p className="mt-5 -mb-16 text-foregroundColor">
+                <div className="h-1/2 rounded-bl-xl rounded-br-xl bg-[#1F1F20] p-4">
+                  <h3 className="text-lg text-foregroundColor">{item.name}</h3>
+                  <p className="-mb-16 mt-5 text-foregroundColor">
                     SR {item.price}
-                    <span className="text-sm line-through opacity-60 ml-3">
+                    <span className="ml-3 text-sm line-through opacity-60">
                       SR {item.price * (1 - discount.discountRate / 100)}
                     </span>
                   </p>
                 </div>
 
                 {/* Discount Tag */}
-                <div className="absolute top-4 left-4 text-black bg-foregroundColor  px-2 py-1 rounded-full flex items-center gap-2">
+                <div className="absolute left-4 top-4 flex items-center gap-2 rounded-full bg-foregroundColor px-2 py-1 text-black">
                   <FaTags />
                   {discount.discountRate}% Off
                 </div>
 
                 {/* Add button */}
-                <button className="absolute top-[40%] right-3 bg-[#D87E27] flex items-center gap-1 text-black px-4 py-1 rounded-full ">
+                <button className="absolute right-3 top-[40%] flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black">
                   Add <GoPlus />
                 </button>
               </li>

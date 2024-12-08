@@ -1,7 +1,3 @@
-import React from 'react'
-
 export default function MenuView() {
-  return (
-    <div>MenuView</div>
-  )
+  return <div>MenuView</div>;
 }

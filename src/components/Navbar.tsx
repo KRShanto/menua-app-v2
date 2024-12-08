@@ -36,7 +36,7 @@ const collapsibleItemsData = [
     label: "Opening Hours",
     content: (
       <>
-        <div className="flex gap-2 items-start">
+        <div className="flex items-start gap-2">
           <FaClock className="mt-1 text-lg" />
           <div className="flex-col">
             <div>Sunday - Wednesday</div>
@@ -44,7 +44,7 @@ const collapsibleItemsData = [
           </div>
         </div>
         <br />
-        <div className="flex gap-2 items-start">
+        <div className="flex items-start gap-2">
           <FaClock className="mt-1 text-lg" />
           <div className="flex-col">
             <div>Thursday - Saturday</div>
@@ -80,18 +80,18 @@ export default function Navbar() {
   return (
     <>
       <button onClick={() => setIsOpen(true)}>
-        <CiMenuFries className="text-foregroundColor size-6" />
+        <CiMenuFries className="size-6 text-foregroundColor" />
       </button>
 
       <div
         className={cn(
-          "fixed inset-y-0 right-0 z-50 w-[250px] transform bg-foregroundColor py-6 transition-transform duration-300 ease-in-out rounded-l-xl",
-          isOpen ? "translate-x-0" : "translate-x-full"
+          "fixed inset-y-0 right-0 z-50 w-[250px] transform rounded-l-xl bg-foregroundColor py-6 transition-transform duration-300 ease-in-out",
+          isOpen ? "translate-x-0" : "translate-x-full",
         )}
       >
         <button
           onClick={() => setIsOpen(false)}
-          className="text-orange-500 ml-5"
+          className="ml-5 text-orange-500"
         >
           <X className="h-6 w-6" />
         </button>
@@ -101,9 +101,9 @@ export default function Navbar() {
             <a
               key={item.label}
               href={item.href}
-              className="flex items-center gap-3 text-zinc-900 px-5"
+              className="flex items-center gap-3 px-5 text-zinc-900"
             >
-              <span className="text-xl flex items-center gap-2">
+              <span className="flex items-center gap-2 text-xl">
                 <item.icon />
                 {item.label}
               </span>
@@ -113,17 +113,17 @@ export default function Navbar() {
           {collapsibleItemsData.map((item) => (
             <Collapsible key={item.id} open={collapsibleItems === item.id}>
               <CollapsibleTrigger
-                className="flex w-full items-center justify-between text-zinc-900 px-5"
+                className="flex w-full items-center justify-between px-5 text-zinc-900"
                 onClick={() =>
                   setCollapsibleItems(
-                    collapsibleItems === item.id ? null : item.id
+                    collapsibleItems === item.id ? null : item.id,
                   )
                 }
               >
                 <span
                   className={cn(
-                    "text-xl flex items-center gap-2",
-                    collapsibleItems === item.id && "text-orange-500"
+                    "flex items-center gap-2 text-xl",
+                    collapsibleItems === item.id && "text-orange-500",
                   )}
                 >
                   <item.icon />
@@ -137,8 +137,8 @@ export default function Navbar() {
               </CollapsibleTrigger>
               <CollapsibleContent
                 className={cn(
-                  "py-2 px-5",
-                  collapsibleItems === item.id && "bg-black/10"
+                  "px-5 py-2",
+                  collapsibleItems === item.id && "bg-black/10",
                 )}
               >
                 {collapsibleItems === item.id && item.content}
@@ -153,11 +153,11 @@ export default function Navbar() {
               <a
                 key={index}
                 href="#"
-                className="text-white bg-orange-500 rounded-full p-1"
+                className="rounded-full bg-orange-500 p-1 text-white"
               >
                 <Icon className="size-6" />
               </a>
-            )
+            ),
           )}
         </div>
       </div>
