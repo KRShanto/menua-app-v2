@@ -1,6 +1,6 @@
 import React from "react";
 import { Radio, Space } from "antd";
-import { langType, viewType } from "../types/menu";
+import { LangType, ViewType } from "../types/menu";
 import { SizeType } from "antd/es/config-provider/SizeContext";
 import { AnyObject } from "antd/es/_util/type";
 
@@ -28,8 +28,8 @@ export default function GroupButton({
   onViewChange,
   defaultPosition,
 }: GroupButtonProps) {
-  const [position, setPosition] = React.useState<langType | viewType | string>(
-    defaultPosition
+  const [position, setPosition] = React.useState<LangType | ViewType | string>(
+    defaultPosition,
   );
   const handleChange = (e: AnyObject) => {
     setPosition(e.target.value);
@@ -48,8 +48,14 @@ export default function GroupButton({
         <Radio.Button
           value={buttonTextOne.toLowerCase()}
           style={{
-            backgroundColor: position === "arabic"|| position === "menu" ? "#F2E7D4" : "transparent",
-            color: position === "arabic"|| position === "menu" ? "black" : "#F2E7D4",
+            backgroundColor:
+              position === "arabic" || position === "menu"
+                ? "#F2E7D4"
+                : "transparent",
+            color:
+              position === "arabic" || position === "menu"
+                ? "black"
+                : "#F2E7D4",
             borderTopLeftRadius: borderRadius,
             borderBottomLeftRadius: borderRadius,
             outline: "none",
@@ -65,8 +71,12 @@ export default function GroupButton({
         <Radio.Button
           value={buttonTextTwo.toLowerCase()}
           style={{
-            backgroundColor: position === "eng" || position === "combo" ? "#F2E7D4" : "transparent",
-            color: position === "eng" || position === "combo" ? "black" : "#F2E7D4 ",
+            backgroundColor:
+              position === "eng" || position === "combo"
+                ? "#F2E7D4"
+                : "transparent",
+            color:
+              position === "eng" || position === "combo" ? "black" : "#F2E7D4 ",
             borderTopRightRadius: borderRadius,
             borderBottomRightRadius: borderRadius,
             outline: "none",

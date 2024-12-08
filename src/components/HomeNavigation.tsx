@@ -7,7 +7,7 @@ interface NavigationProps {
 export default function HomeNavigation({ onViewChange }: NavigationProps) {
   return (
     <div>
-      <div className="container ">
+      <div className="container">
         <GroupButton
           padding="0px 32px"
           buttonTextOne="Menu"
