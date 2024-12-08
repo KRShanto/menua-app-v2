@@ -1,1 +1,2 @@
-export type ViewType = "menu" | "combo";
+export type viewType = "menu" | "combo";
+export type langType="arabic" | "eng";
