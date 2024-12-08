@@ -1,5 +1,8 @@
 import { FaFire, FaTags } from "react-icons/fa";
 import { GoPlus } from "react-icons/go";
+import BottomDrawer from "./BottomDrawer";
+import { useState } from "react";
+import { ItemTemplate } from "@/types/menu";
 
 const discountData = [
   {
@@ -70,7 +73,22 @@ const discountData = [
   // },
 ];
 
+
+
 export default function DiscountSection() {
+  const [selectedItem, setSelectedItem] = useState<ItemTemplate | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const handleItemClick = (item: ItemTemplate) => {
+    setSelectedItem(item);
+    setDrawerOpen(true);
+  };
+
+  const handleCloseDrawer = () => {
+    setDrawerOpen(false);
+    setSelectedItem(null);
+  };
+
   return (
     <div>
       {discountData.map((discount, index) => (
@@ -83,8 +101,12 @@ export default function DiscountSection() {
 
           {/* Item List */}
           <ul className="mt-2 flex gap-3 overflow-x-scroll">
-            {discount.items.map((item, index) => (
-              <li key={index} className="relative min-w-[16rem]">
+            {discount.items.map((item) => (
+              <li
+                key={item.name}
+                className="relative min-w-[16rem]"
+                onClick={() => handleItemClick(item)}
+              >
                 <img
                   src={item.image}
                   alt={item.name}
@@ -115,6 +137,11 @@ export default function DiscountSection() {
           </ul>
         </div>
       ))}
+      <BottomDrawer
+        item={selectedItem}
+        open={drawerOpen}
+        onClose={handleCloseDrawer}
+      />
     </div>
   );
 }

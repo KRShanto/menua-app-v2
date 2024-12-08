@@ -1,4 +1,5 @@
 import { MdOutlineArrowOutward } from "react-icons/md";
+import { FaHeart } from "react-icons/fa";
 
 interface MenuCardProps {
   title: string;
@@ -12,27 +13,34 @@ export default function MenuCard({
   title,
   imageUrl,
   itemCount,
+  likes,
 }: MenuCardProps) {
   return (
     <div>
-      <div className="flex flex-col rounded-sm  border-b border-gray-800 shadow-md">
+      <div className="flex flex-col rounded-sm border-b border-gray-800 shadow-md">
         <div>
           <img
             src={imageUrl}
             alt={title}
             width="400"
             height="400"
-            className="rounded-xl h-[200px] object-cover"
+            className="h-[200px] rounded-xl object-cover"
           />
         </div>
         <div className="flex flex-col rounded-b-xl py-4 text-primaryText">
           <div className="flex flex-col gap-2 px-2">
-            <p className="text-xl">{title}</p>
-            <p className=" text-sm">{itemCount}</p>
-          </div>
-          <div className="flex  justify-end items-center gap-2 px-4">
-            <span>See Details</span>
-            <MdOutlineArrowOutward size={16} />
+            <p className="text-lg">{title}</p>
+            <p className="text-sm">{itemCount} Items</p>
+            <div className="flex items-center justify-between gap-2">
+              <div className="relative flex items-center justify-center gap-1">
+                <FaHeart size={16} color="#F37554" className="relative pt-1" />{" "}
+                <span className="text-center text-sm">{likes}</span>
+              </div>
+              <div className="flex items-center justify-end gap-2 px-4">
+                <span>See Details</span>
+                <MdOutlineArrowOutward size={16} />
+              </div>
+            </div>
           </div>
         </div>
       </div>
