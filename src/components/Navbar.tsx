@@ -1,0 +1,166 @@
+"use client";
+
+import { X } from "lucide-react";
+import { cn } from "@/lib/utils";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { CiMenuFries } from "react-icons/ci";
+import { useState } from "react";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import {
+  FaClock,
+  FaHome,
+  FaInstagram,
+  FaPhoneAlt,
+  FaSnapchatGhost,
+  FaTiktok,
+  FaWhatsapp,
+  FaShoppingCart,
+} from "react-icons/fa";
+import { FaLocationDot } from "react-icons/fa6";
+import { RiFeedbackFill } from "react-icons/ri";
+
+const menuItems = [
+  { icon: FaHome, label: "Home Page", href: "#" },
+  { icon: FaShoppingCart, label: "Menu Cart", href: "#" },
+  { icon: RiFeedbackFill, label: "Feedback", href: "#" },
+];
+
+const collapsibleItemsData = [
+  {
+    id: "opening-hours",
+    icon: FaClock,
+    label: "Opening Hours",
+    content: (
+      <>
+        <div className="flex gap-2 items-start">
+          <FaClock className="mt-1 text-lg" />
+          <div className="flex-col">
+            <div>Sunday - Wednesday</div>
+            <div className="font-bold">1:00 PM - 1:00 AM</div>
+          </div>
+        </div>
+        <br />
+        <div className="flex gap-2 items-start">
+          <FaClock className="mt-1 text-lg" />
+          <div className="flex-col">
+            <div>Thursday - Saturday</div>
+            <div className="font-bold">1:00 PM - 2:00 AM</div>
+          </div>
+        </div>
+      </>
+    ),
+  },
+  {
+    id: "contact-us",
+    icon: FaPhoneAlt,
+    label: "Contact Us",
+    content: <p>+966 55094 2073</p>,
+  },
+  {
+    id: "location",
+    icon: FaLocationDot,
+    label: "Location",
+    content: (
+      <div className="space-y-2 pl-4">
+        <p>123 Restaurant Street</p>
+        <p>City, Country</p>
+      </div>
+    ),
+  },
+];
+
+export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [collapsibleItems, setCollapsibleItems] = useState<string | null>(null);
+
+  return (
+    <>
+      <button onClick={() => setIsOpen(true)}>
+        <CiMenuFries className="text-foregroundColor size-6" />
+      </button>
+
+      <div
+        className={cn(
+          "fixed inset-y-0 right-0 z-50 w-[250px] transform bg-foregroundColor py-6 transition-transform duration-300 ease-in-out rounded-l-xl",
+          isOpen ? "translate-x-0" : "translate-x-full"
+        )}
+      >
+        <button
+          onClick={() => setIsOpen(false)}
+          className="text-orange-500 ml-5"
+        >
+          <X className="h-6 w-6" />
+        </button>
+
+        <nav className="mt-8 space-y-6">
+          {menuItems.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              className="flex items-center gap-3 text-zinc-900 px-5"
+            >
+              <span className="text-xl flex items-center gap-2">
+                <item.icon />
+                {item.label}
+              </span>
+            </a>
+          ))}
+
+          {collapsibleItemsData.map((item) => (
+            <Collapsible key={item.id} open={collapsibleItems === item.id}>
+              <CollapsibleTrigger
+                className="flex w-full items-center justify-between text-zinc-900 px-5"
+                onClick={() =>
+                  setCollapsibleItems(
+                    collapsibleItems === item.id ? null : item.id
+                  )
+                }
+              >
+                <span
+                  className={cn(
+                    "text-xl flex items-center gap-2",
+                    collapsibleItems === item.id && "text-orange-500"
+                  )}
+                >
+                  <item.icon />
+                  {item.label}
+                </span>
+                {collapsibleItems === item.id ? (
+                  <IoIosArrowUp className="text-zinc-900" />
+                ) : (
+                  <IoIosArrowDown className="text-zinc-900" />
+                )}
+              </CollapsibleTrigger>
+              <CollapsibleContent
+                className={cn(
+                  "py-2 px-5",
+                  collapsibleItems === item.id && "bg-black/10"
+                )}
+              >
+                {collapsibleItems === item.id && item.content}
+              </CollapsibleContent>
+            </Collapsible>
+          ))}
+        </nav>
+
+        <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-4">
+          {[FaWhatsapp, FaInstagram, FaTiktok, FaSnapchatGhost].map(
+            (Icon, index) => (
+              <a
+                key={index}
+                href="#"
+                className="text-white bg-orange-500 rounded-full p-1"
+              >
+                <Icon className="size-6" />
+              </a>
+            )
+          )}
+        </div>
+      </div>
+    </>
+  );
+}

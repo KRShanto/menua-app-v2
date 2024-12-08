@@ -1,6 +1,6 @@
-import { CiMenuFries } from "react-icons/ci";
 import AlBaharatIcon from "../assets/icons/albaharat.svg?react";
 import GroupButton from "./GroupButton";
+import Navbar from "./Navbar";
 
 export default function HeaderLogo() {
   return (
@@ -16,7 +16,7 @@ export default function HeaderLogo() {
         <AlBaharatIcon className="size-10" />
       </div>
       <div>
-        <CiMenuFries className="text-foregroundColor size-6" />
+        <Navbar />
       </div>
     </div>
   );

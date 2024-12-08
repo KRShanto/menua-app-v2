@@ -101,7 +101,7 @@ export default function DiscountSection() {
                 </div>
 
                 {/* Discount Tag */}
-                <div className="absolute top-4 left-4 text-black bg-foregroundColor font-semibold px-2 py-1 rounded-full flex items-center gap-2">
+                <div className="absolute top-4 left-4 text-black bg-foregroundColor  px-2 py-1 rounded-full flex items-center gap-2">
                   <FaTags />
                   {discount.discountRate}% Off
                 </div>
