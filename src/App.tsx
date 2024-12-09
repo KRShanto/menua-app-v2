@@ -4,6 +4,7 @@ import { ViewType } from "./types/menu";
 import Layout from "./Layout";
 import MenuView from "./components/MenuView";
 import ComboView from "./components/ComboView";
+import MenuCart from "./components/MenuCart";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -23,7 +24,8 @@ const App = () => {
 
   return (
     <Layout onViewChange={(view) => setActiveView(view)}>
-      {activeView === "menu" ? <MenuView /> : <ComboView />}
+      {/* {activeView === "menu" ? <MenuView /> : <ComboView />} */}
+      <MenuCart />
     </Layout>
   );
 };

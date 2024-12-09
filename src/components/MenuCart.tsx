@@ -1,44 +1,10 @@
 import { BsCart } from "react-icons/bs";
-
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-}
-
-const cart: CartItem[] = [
-  {
-    id: "234235",
-    name: "Chicken of Cream Soup",
-    price: 15,
-    image:
-      "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    id: "d00s;z",
-    name: "Thai Soup",
-    price: 25,
-    image:
-      "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    id: "100111",
-    name: "Chinese popcorn",
-    price: 32,
-    image:
-      "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    id: "1010dd",
-    name: "Alu vaji",
-    price: 8,
-    image:
-      "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-];
+import { useCartStore } from "../stores/cart";
+import { FaMinus, FaPlus } from "react-icons/fa";
 
 export default function MenuCart() {
+  const { cart, increaseQuantity, decreaseQuantity } = useCartStore();
+
   return (
     <section className="text-foregroundColor">
       <h2 className="ml-5 flex items-center gap-2 text-lg">
@@ -60,10 +26,16 @@ export default function MenuCart() {
                   <p>SR {item.price}</p>
                 </div>
 
-                <div>
-                  <button>+</button>
-                  <span>1</span>
-                  <button>-</button>
+                <div className="bg-yellowBackground flex gap-2 rounded-full px-2 text-sm text-black">
+                  <button onClick={() => decreaseQuantity(item.id)}>
+                    <FaMinus size={6} />
+                  </button>
+                  <span>
+                    {cart.find((i) => i.id === item.id)?.quantity || 0}
+                  </span>
+                  <button onClick={() => increaseQuantity(item.id)}>
+                    <FaPlus size={8} />
+                  </button>
                 </div>
               </div>
             </li>
