@@ -3,6 +3,7 @@ import { GoPlus } from "react-icons/go";
 import BottomDrawer from "./BottomDrawer";
 import { useState } from "react";
 import { ItemTemplate } from "@/types/menu";
+import { useAddToCartStore } from "@/stores/useAddToCart";
 
 const discountData = [
   {
@@ -12,72 +13,61 @@ const discountData = [
       {
         name: "Chicken of Cream Soup",
         price: 100,
+        demoPrice: 120,
         image:
           "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        description: "A delicious soup made with chicken and cream.",
+        calories: "500",
+        likes: "15",
       },
       {
         name: "Beef of Cream Soup",
         price: 150,
+        demoPrice: 200,
         image:
           "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        description: "A delicious soup made with beef and cream.",
+        calories: "600",
+        likes: "8",
       },
       {
         name: "Chicken nuggets",
         price: 120,
+        demoPrice: 150,
         image:
           "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        description: "Delicious chicken nuggets.",
+        calories: "700",
+        likes: "10",
       },
       {
         name: "Beef nuggets",
         price: 130,
+        demoPrice: 160,
         image:
           "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        description: "Delicious beef nuggets.",
+        calories: "800",
+        likes: "12",
       },
       {
         name: "French fries",
         price: 100,
+        demoPrice: 120,
         image:
           "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        description: "Delicious french fries.",
+        calories: "900",
+        likes: "10",
       },
     ],
   },
-  // {
-  //   name: "Last Week's Special",
-  //   discountRate: 10,
-  //   items: [
-  //     {
-  //       name: "Beef of Cream Soup",
-  //       price: 150,
-  //       image:
-  //         "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  //     },
-  //     {
-  //       name: "Chicken nuggets",
-  //       price: 120,
-  //       image:
-  //         "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  //     },
-  //     {
-  //       name: "Beef nuggets",
-  //       price: 130,
-  //       image:
-  //         "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  //     },
-  //     {
-  //       name: "French fries",
-  //       price: 100,
-  //       image:
-  //         "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  //     },
-  //   ],
-  // },
 ];
-
-
 
 export default function DiscountSection() {
   const [selectedItem, setSelectedItem] = useState<ItemTemplate | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const { itemQuantity, increment, decrement,showToSlide } = useAddToCartStore();
 
   const handleItemClick = (item: ItemTemplate) => {
     setSelectedItem(item);
@@ -129,9 +119,20 @@ export default function DiscountSection() {
                 </div>
 
                 {/* Add button */}
-                <button className="absolute right-3 top-[40%] flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black">
-                  Add <GoPlus />
-                </button>
+                {itemQuantity === 0 || !showToSlide ? (
+                  <button
+                    className="absolute right-3 top-[40%] flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black"
+                    // onClick={add}
+                  >
+                    Add <GoPlus />
+                  </button>
+                ) : (
+                  <div className="absolute right-3 top-[40%] flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black">
+                    <button onClick={decrement}>-</button>
+                    <span>{itemQuantity}</span>
+                    <button onClick={increment}>+</button>
+                  </div>
+                )}
               </li>
             ))}
           </ul>
