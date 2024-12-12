@@ -120,11 +120,11 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
                   </div>
                 </div>
               </div>
-              <div className="mx-auto">
+              <div className="container flex justify-center">
                 <button
                   className={`flex items-center justify-center rounded-lg ${
                     cartActivated ? "bg-[#D87E27]" : "bg-[#F2C5AE]"
-                  } mx-auto w-[350px] py-2 text-sm text-[#F2E7D4]`}
+                  } mx-auto w-[340px] py-2 text-sm text-[#F2E7D4]`}
                   onClick={handleAddToCart}
                 >
                   <span>Add to Cart</span>
@@ -139,7 +139,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
       {showGoToCartButton && (
         <div className="fixed bottom-0 left-0 right-0 z-20 flex justify-center p-4">
           <button
-            className="flex w-[350px] items-center justify-center rounded-lg bg-[#D87E27] py-3 text-sm text-[#F2E7D4]"
+            className="flex w-[340px] items-center justify-center rounded-lg bg-[#D87E27] py-3 text-sm text-[#F2E7D4]"
             onClick={() => {
               navigatetoCart("/cart");
             }}
