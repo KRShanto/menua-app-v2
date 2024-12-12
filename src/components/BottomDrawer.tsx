@@ -120,11 +120,11 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
                   </div>
                 </div>
               </div>
-              <div className="container flex justify-center">
+              <div className="flex justify-center px-4">
                 <button
                   className={`flex items-center justify-center rounded-lg ${
                     cartActivated ? "bg-[#D87E27]" : "bg-[#F2C5AE]"
-                  } mx-auto w-[340px] py-2 text-sm text-[#F2E7D4]`}
+                  } max-w-[350px] w-full py-2 text-sm text-[#F2E7D4]`}
                   onClick={handleAddToCart}
                 >
                   <span>Add to Cart</span>
