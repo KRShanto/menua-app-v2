@@ -89,7 +89,12 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
 
                 <div className="mb-1 flex items-center justify-between gap-2">
                   <div className="relative flex items-center justify-center gap-1">
-                    <span className="text-center text-sm">{item.price} SR</span>
+                    <span className="text-center text-sm font-semibold">
+                      SR {item.price}{" "}
+                    </span>
+                    <span className="text-sm line-through">
+                      SR {item.demoPrice}
+                    </span>
                   </div>
                   <div className="rounded-xl px-2">
                     <div>
@@ -116,25 +121,27 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
                 </div>
               </div>
             </div>
-            {addedToCart ? (
-              <button
-                className="mx-auto flex w-[400px] items-center justify-center rounded-lg bg-[#D87E27] py-2 text-sm text-[#F2E7D4]"
-                onClick={() => {
-                  // Navigate to cart or perform any action
-                }}
-              >
-                <span>Go to Cart</span>
-              </button>
-            ) : (
-              <button
-                className={`flex w-[400px] items-center justify-center rounded-lg ${
-                  cartActivated ? "bg-[#D87E27]" : "bg-[#F2C5AE]"
-                } mx-auto py-2 text-sm text-[#F2E7D4]`}
-                onClick={handleAddToCart}
-              >
-                <span>Add to Cart</span>
-              </button>
-            )}
+            <div className="mx-auto">
+              {addedToCart ? (
+                <button
+                  className="mx-auto flex w-[350px] items-center justify-center rounded-lg bg-[#D87E27] py-2 text-sm text-[#F2E7D4]"
+                  onClick={() => {
+                    // Navigate to cart or anything else
+                  }}
+                >
+                  <span>Go to Cart</span>
+                </button>
+              ) : (
+                <button
+                  className={`flex items-center justify-center rounded-lg ${
+                    cartActivated ? "bg-[#D87E27]" : "bg-[#F2C5AE]"
+                  } mx-auto w-[350px] py-2 text-sm text-[#F2E7D4]`}
+                  onClick={handleAddToCart}
+                >
+                  <span>Add to Cart</span>
+                </button>
+              )}
+            </div>
           </div>
         ) : (
           <p>No item selected</p>

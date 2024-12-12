@@ -7,6 +7,7 @@ interface MenuCardProps {
   likes?: number;
   imageUrl: string;
   className?: string;
+  onClick?: () => void;
 }
 
 export default function MenuCard({
@@ -14,10 +15,14 @@ export default function MenuCard({
   imageUrl,
   itemCount,
   likes,
+  onClick,
 }: MenuCardProps) {
   return (
     <div>
-      <div className="flex flex-col rounded-sm border-b border-gray-800 shadow-md">
+      <div
+        className="flex flex-col rounded-sm border-b border-gray-800 shadow-md"
+        onClick={onClick}
+      >
         <div>
           <img
             src={imageUrl}

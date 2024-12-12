@@ -24,7 +24,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { RiFeedbackFill } from "react-icons/ri";
 
 const menuItems = [
-  { icon: FaHome, label: "Home Page", href: "#" },
+  { icon: FaHome, label: "Home Page", href: "/" },
   { icon: FaShoppingCart, label: "Menu Cart", href: "#" },
   { icon: RiFeedbackFill, label: "Feedback", href: "#" },
 ];
