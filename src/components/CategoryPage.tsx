@@ -4,9 +4,15 @@ import { useParams } from "react-router-dom";
 import { MENU_DATA } from "@/lib/menuData";
 import { MdDiscount } from "react-icons/md";
 import { FaHeart } from "react-icons/fa";
+import BottomDrawer from "./BottomDrawer";
+import { useState } from "react";
+import { MenuItem } from "@/types/menu";
 
 export default function CategoryPage() {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const { categoryId } = useParams<{ categoryId: string }>();
+
   const category = MENU_DATA.find(
     (category) => category.id === Number(categoryId),
   );
@@ -14,7 +20,15 @@ export default function CategoryPage() {
   if (!category) {
     return <div className="container p-4">Category not found.</div>;
   }
+  const handleItemClick = (item: MenuItem) => {
+    setSelectedItem(item);
+    setDrawerOpen(true);
+  };
 
+  const handleCloseDrawer = () => {
+    setDrawerOpen(false);
+    setSelectedItem(null);
+  };
   return (
     <div>
       <div className="relative">
@@ -37,6 +51,7 @@ export default function CategoryPage() {
           <div
             key={item.id}
             className="group relative flex items-center gap-3 overflow-hidden rounded-lg bg-[#2B2A2C] p-2"
+            onClick={() => handleItemClick(item)}
           >
             <div className="relative h-16 w-20 flex-shrink-0">
               <img
@@ -77,6 +92,11 @@ export default function CategoryPage() {
           </div>
         ))}
       </div>
+      <BottomDrawer
+        item={selectedItem}
+        open={drawerOpen}
+        onClose={handleCloseDrawer}
+      />
     </div>
   );
 }

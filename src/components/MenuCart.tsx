@@ -1,9 +1,11 @@
 import { BsCart } from "react-icons/bs";
 import { useCartStore } from "../stores/cart";
 import { FaMinus, FaPlus } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export default function MenuCart() {
   const { cart, increaseQuantity, decreaseQuantity } = useCartStore();
+  const navigate = useNavigate();
 
   return (
     <section className="text-foregroundColor">
@@ -26,7 +28,7 @@ export default function MenuCart() {
                   <p>SR {item.price}</p>
                 </div>
 
-                <div className="bg-yellowBackground flex gap-2 rounded-full px-2 text-sm text-black">
+                <div className="flex gap-2 rounded-full bg-yellowBackground px-2 text-sm text-black">
                   <button onClick={() => decreaseQuantity(item.id)}>
                     <FaMinus size={6} />
                   </button>
@@ -44,6 +46,22 @@ export default function MenuCart() {
           </>
         ))}
       </ul>
+      <div className="mt-28 flex justify-center">
+        <div className="flex justify-end gap-3">
+          <button
+            className="rounded-lg bg-black px-10 py-3 text-sm text-[#F2E7D4]"
+            onClick={() => navigate("/")}
+          >
+            Go to Menu
+          </button>
+          <button
+            className="rounded-lg bg-[#D87E27] px-10 py-3 text-sm text-[#F2E7D4]"
+            onClick={() => navigate("/orderhistory")}
+          >
+            Confirm Order
+          </button>
+        </div>
+      </div>
     </section>
   );
 }

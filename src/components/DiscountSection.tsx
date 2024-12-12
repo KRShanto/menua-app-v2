@@ -2,7 +2,7 @@ import { FaFire, FaTags } from "react-icons/fa";
 import { GoPlus } from "react-icons/go";
 import BottomDrawer from "./BottomDrawer";
 import { useState } from "react";
-import { ItemTemplate } from "@/types/menu";
+import { MenuItem } from "@/types/menu";
 import { useAddToCartStore } from "@/stores/useAddToCart";
 
 const discountData = [
@@ -11,6 +11,7 @@ const discountData = [
     discountRate: 25,
     items: [
       {
+        id: 1,
         name: "Chicken of Cream Soup",
         price: 100,
         demoPrice: 120,
@@ -21,6 +22,7 @@ const discountData = [
         likes: "15",
       },
       {
+        id: 2,
         name: "Beef of Cream Soup",
         price: 150,
         demoPrice: 200,
@@ -31,6 +33,7 @@ const discountData = [
         likes: "8",
       },
       {
+        id: 3,
         name: "Chicken nuggets",
         price: 120,
         demoPrice: 150,
@@ -41,6 +44,7 @@ const discountData = [
         likes: "10",
       },
       {
+        id: 4,
         name: "Beef nuggets",
         price: 130,
         demoPrice: 160,
@@ -51,6 +55,7 @@ const discountData = [
         likes: "12",
       },
       {
+        id: 5,
         name: "French fries",
         price: 100,
         demoPrice: 120,
@@ -65,11 +70,12 @@ const discountData = [
 ];
 
 export default function DiscountSection() {
-  const [selectedItem, setSelectedItem] = useState<ItemTemplate | null>(null);
+  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const { itemQuantity, increment, decrement,showToSlide } = useAddToCartStore();
+  const { itemQuantity, increment, decrement, showToSlide } =
+    useAddToCartStore();
 
-  const handleItemClick = (item: ItemTemplate) => {
+  const handleItemClick = (item: MenuItem) => {
     setSelectedItem(item);
     setDrawerOpen(true);
   };

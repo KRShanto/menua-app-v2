@@ -2,9 +2,10 @@
 export type ViewType = "menu" | "combo" | "category";
 export type LangType = "arabic" | "eng";
 export interface ItemTemplate {
+  id: number;
   name: string;
   price: number;
-  demoPrice: number;
+  demoPrice?: number;
   image: string;
   description: string;
   calories: string;
@@ -14,6 +15,7 @@ export interface ItemTemplate {
 type MenuItem = {
   id: number;
   name: string;
+  description?: string;
   calories: string;
   price: number;
   demoPrice?: number;

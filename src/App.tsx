@@ -6,6 +6,8 @@ import MenuView from "./components/MenuView";
 import ComboView from "./components/ComboView";
 import CategoryPage from "./components/CategoryPage";
 import { ViewType } from "./types/menu";
+import MenuCart from "./components/MenuCart";
+import OrderHistory from "./components/OrderHistory";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -35,6 +37,8 @@ const App = () => {
           />
           <Route path="/combo" element={<ComboView />} />
           <Route path="/category/:categoryId" element={<CategoryPage />} />
+          <Route path="/cart" element={<MenuCart />} />
+          <Route path="/orderhistory" element={<OrderHistory />} />
         </Routes>
       </Layout>
     </Router>

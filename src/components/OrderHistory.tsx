@@ -1,8 +1,10 @@
 import { useCartStore } from "@/stores/cart";
 import { X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function OrderHistory() {
   const { cart } = useCartStore();
+  const navigate = useNavigate();
 
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-md flex-col bg-[#F2E7D4] md:hidden">
@@ -11,7 +13,7 @@ export default function OrderHistory() {
           className="absolute right-4 top-4 text-orange-600 hover:text-orange-700"
           aria-label="Close"
         >
-          <X className="h-7 w-7" />
+          <X className="h-7 w-7" onClick={() => navigate("/")}/>
         </button>
         <div className="mt-10 space-y-1.5 text-center">
           <p className="text-sm">To complete your order</p>
