@@ -1,4 +1,6 @@
+import { useNavigate } from "react-router-dom";
 import MenuCard from "./MenuCard";
+import { Category } from "@/types/menu";
 
 const MENU_CATEGORIES = [
   {
@@ -31,6 +33,11 @@ const MENU_CATEGORIES = [
   },
 ];
 export default function ComboView() {
+  const navigate = useNavigate();
+
+  const handleCategorySelect = (category: Category) => {
+    navigate(`/category/${category.id}`);
+  };
   return (
     <div className="relative mt-4 h-screen overflow-y-auto">
       <div className="container">
