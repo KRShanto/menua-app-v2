@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Drawer, FloatButton } from "antd";
-import { MenuItem } from "@/types/menu";
+import { MenuItem } from "@/lib/firebase";
 import { RxCross2 } from "react-icons/rx";
-import { FaHeart } from "react-icons/fa";
 import { GoPlus } from "react-icons/go";
 import { LuMinus } from "react-icons/lu";
 import { useAddToCartStore } from "@/stores/useAddToCart";
@@ -62,7 +61,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
             <div className="flex h-fit flex-col rounded-sm p-0">
               <div>
                 <img
-                  src={item.image}
+                  src={item.imageURL}
                   alt={item.name}
                   width="400"
                   height="400"
@@ -73,14 +72,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
                 <div className="flex flex-col gap-2 px-2 font-cairo">
                   <div className="flex items-center justify-between">
                     <p className="font-cairo text-xl font-bold">{item.name}</p>
-                    <div className="flex gap-1 text-[#F37554]">
-                      <FaHeart
-                        size={18}
-                        color="#F37554"
-                        className="relative pt-1"
-                      />
-                      <span className="text-sm">{item.likes}</span>
-                    </div>
                   </div>
                   <div className="flex w-[100px] items-center justify-center rounded-xl bg-[#F2C5AE] py-1 text-sm text-[#F37554]">
                     <span>{item.calories} calories</span>
@@ -89,10 +80,10 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
                   <div className="mb-1 flex items-center justify-between gap-2">
                     <div className="relative flex items-center justify-center gap-1">
                       <span className="text-center text-sm font-semibold">
-                        SR {item.price}{" "}
+                        SR {item.discountedPrice}{" "}
                       </span>
                       <span className="text-sm line-through">
-                        SR {item.demoPrice}
+                        SR {item.price}
                       </span>
                     </div>
                     <div className="rounded-xl px-2">
@@ -124,7 +115,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
                 <button
                   className={`flex items-center justify-center rounded-lg ${
                     cartActivated ? "bg-[#D87E27]" : "bg-[#F2C5AE]"
-                  } max-w-[350px] w-full py-2 text-sm text-[#F2E7D4]`}
+                  } w-full max-w-[350px] py-2 text-sm text-[#F2E7D4]`}
                   onClick={handleAddToCart}
                 >
                   <span>Add to Cart</span>

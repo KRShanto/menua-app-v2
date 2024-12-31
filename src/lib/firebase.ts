@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+import { collection, getDocs, getFirestore } from "firebase/firestore";
+import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
@@ -36,3 +36,87 @@ export const MANAGER_DEFAULT_IMAGE = "/user-image.png";
 export const FEEDBACK_COLLECTION = import.meta.env.PROD
   ? "production__feedback"
   : "development__feedback";
+
+export interface MenuItem {
+  id: string;
+  name: string;
+  category: string;
+  calories: string;
+  price: number;
+  description: string;
+  discountedPrice: number;
+  discountPercentage: number;
+  likes: string;
+  imageURL: string;
+}
+
+export interface MenuCategory {
+  title: string;
+  items: MenuItem[];
+  imageURL: string;
+}
+
+export interface Discount {
+  itemId: string;
+  discountPercentage: number;
+}
+
+export const fetchMenuData = async (): Promise<MenuCategory[]> => {
+  const menuCollection = collection(db, MENU_COLLECTION);
+  const discountCollection = collection(db, DISCOUNT_COLLECTION);
+
+  const [menuSnapshot, discountSnapshot] = await Promise.all([
+    getDocs(menuCollection),
+    getDocs(discountCollection),
+  ]);
+
+  const menuItems: MenuItem[] = menuSnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as MenuItem[];
+
+  const discounts = discountSnapshot.docs.map((doc) => ({
+    ...doc.data(),
+  }));
+
+  console.log("Discounts: ", discounts);
+
+  const discountMap = discounts.reduce(
+    (acc, discount) => {
+      acc[discount.itemId] = discount;
+      return acc;
+    },
+    {} as { [key: string]: Discount },
+  );
+
+  console.log("Discount Map: ", discountMap);
+
+  for (const item of menuItems) {
+    const discount = discountMap[item.id];
+
+    console.log("Item discount: ", discount);
+    if (discount) {
+      item.discountPercentage = discount.rate;
+      item.discountedPrice = item.price - (item.price * discount.rate) / 100;
+    }
+
+    // Fetch the download URL for the image
+    const imageRef = ref(storage, item.imageURL);
+    item.imageURL = await getDownloadURL(imageRef);
+  }
+
+  const menuCategories: { [key: string]: MenuCategory } = {};
+
+  menuItems.forEach((item) => {
+    if (!menuCategories[item.category]) {
+      menuCategories[item.category] = {
+        title: item.category,
+        items: [],
+        imageURL: item.imageURL, // Use the first item's image as the category image
+      };
+    }
+    menuCategories[item.category].items.push(item);
+  });
+
+  return Object.values(menuCategories);
+};
