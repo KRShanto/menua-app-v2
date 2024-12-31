@@ -5,14 +5,14 @@ interface MenuCardProps {
   title: string;
   itemCount?: number;
   likes?: number;
-  imageUrl: string;
+  imageURL: string;
   className?: string;
   onClick?: () => void;
 }
 
 export default function MenuCard({
   title,
-  imageUrl,
+  imageURL,
   itemCount,
   likes,
   onClick,
@@ -25,7 +25,7 @@ export default function MenuCard({
       >
         <div>
           <img
-            src={imageUrl}
+            src={imageURL}
             alt={title}
             width="400"
             height="400"
