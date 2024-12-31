@@ -1,17 +1,21 @@
 "use client";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { MdDiscount } from "react-icons/md";
 import BottomDrawer from "./BottomDrawer";
 import { fetchMenuData, MenuItem } from "@/lib/firebase"; // Import the fetchMenuData function
 import { MenuCategory } from "@/lib/firebase";
+import { useAddToCartStore } from "@/stores/useAddToCart";
+import { GoPlus } from "react-icons/go";
+import { LuMinus } from "react-icons/lu";
 
 export default function CategoryPage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [category, setCategory] = useState<MenuCategory | null>(null);
   const { categoryId } = useParams<{ categoryId: string }>();
+  const { itemQuantity, increment, decrement, selectedItem, setSelectedItem } =
+    useAddToCartStore();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,7 +42,7 @@ export default function CategoryPage() {
 
   const handleCloseDrawer = () => {
     setDrawerOpen(false);
-    setSelectedItem(null);
+    // reset();
   };
 
   return (
@@ -90,20 +94,34 @@ export default function CategoryPage() {
               </div>
             </div>
             <div className="flex flex-col gap-6">
-              <Button
-                variant="ghost"
-                className="h-6 rounded-full bg-[#D87E27] px-3 text-black hover:bg-orange-400 hover:text-black"
-              >
-                Add +
-              </Button>
+              <div>
+                {itemQuantity === 0 ? (
+                  <button
+                    className="flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black"
+                    // onClick={add}
+                  >
+                    Add <GoPlus size={16} />
+                  </button>
+                ) : (
+                  <div className="flex items-center rounded-full bg-[#D87E27] px-4 py-1 text-black">
+                    <button className="" onClick={decrement}>
+                      <LuMinus size={14} />
+                    </button>
+                    <span className="mx-2">{itemQuantity}</span>
+                    <button onClick={increment}>
+                      <GoPlus size={16} />
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         ))}
       </div>
       <BottomDrawer
-        item={selectedItem}
         open={drawerOpen}
         onClose={handleCloseDrawer}
+        item={selectedItem}
       />
     </div>
   );

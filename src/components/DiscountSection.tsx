@@ -11,59 +11,17 @@ const discountData = [
     discountRate: 25,
     items: [
       {
-        id: 1,
+        id: "1",
         name: "Chicken of Cream Soup",
+        category: "Chicken",
         price: 100,
-        demoPrice: 120,
-        image:
+        discountedPrice: 120,
+        discountPercentage: 20,
+        imageURL:
           "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         description: "A delicious soup made with chicken and cream.",
         calories: "500",
         likes: "15",
-      },
-      {
-        id: 2,
-        name: "Beef of Cream Soup",
-        price: 150,
-        demoPrice: 200,
-        image:
-          "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        description: "A delicious soup made with beef and cream.",
-        calories: "600",
-        likes: "8",
-      },
-      {
-        id: 3,
-        name: "Chicken nuggets",
-        price: 120,
-        demoPrice: 150,
-        image:
-          "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        description: "Delicious chicken nuggets.",
-        calories: "700",
-        likes: "10",
-      },
-      {
-        id: 4,
-        name: "Beef nuggets",
-        price: 130,
-        demoPrice: 160,
-        image:
-          "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        description: "Delicious beef nuggets.",
-        calories: "800",
-        likes: "12",
-      },
-      {
-        id: 5,
-        name: "French fries",
-        price: 100,
-        demoPrice: 120,
-        image:
-          "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        description: "Delicious french fries.",
-        calories: "900",
-        likes: "10",
       },
     ],
   },
@@ -104,7 +62,7 @@ export default function DiscountSection() {
                 onClick={() => handleItemClick(item)}
               >
                 <img
-                  src={item.image}
+                  src={item.imageURL}
                   alt={item.name}
                   className="h-1/2 w-full rounded-tl-xl rounded-tr-xl"
                 />

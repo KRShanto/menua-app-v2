@@ -1,4 +1,3 @@
-
 export type ViewType = "menu" | "combo" | "category";
 export type LangType = "arabic" | "eng";
 export interface ItemTemplate {
@@ -13,15 +12,16 @@ export interface ItemTemplate {
 }
 
 type MenuItem = {
-  id: number;
+  id: string;
   name: string;
-  description?: string;
+  category: string;
   calories: string;
   price: number;
-  demoPrice?: number;
-  discountPercentage?: number;
-  likes?: string;
-  image: string;
+  description: string;
+  discountedPrice: number;
+  discountPercentage: number;
+  likes: string;
+  imageURL: string;
 };
 
 type Category = {

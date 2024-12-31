@@ -6,9 +6,10 @@ import { GoPlus } from "react-icons/go";
 import { LuMinus } from "react-icons/lu";
 import { useAddToCartStore } from "@/stores/useAddToCart";
 import { useNavigate } from "react-router-dom";
+// import { useCartStore } from "@/stores/cart";
 
 interface BottomDrawerProps {
-  item: MenuItem | null;
+  item?: MenuItem | null;
   open: boolean;
   onClose: () => void;
 }
@@ -17,8 +18,18 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
   const [cartActivated, setCartActivated] = useState(false);
 
   const [showGoToCartButton, setShowGoToCartButton] = useState(false);
-  const { itemQuantity, add, increment, decrement, setShowToSlide, addItem } =
-    useAddToCartStore();
+  const {
+    itemQuantity,
+    add,
+    increaseQuantity,
+    decrement,
+    setShowToSlide,
+    addItem,
+    selectedItem,
+    setSelectedItem,
+    addToCart,
+  } = useAddToCartStore();
+
   const navigatetoCart = useNavigate();
   useEffect(() => {
     if (itemQuantity > 0) {
@@ -29,8 +40,15 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
   }, [itemQuantity]);
 
   const handleAddToCart = () => {
-    if (itemQuantity > 0) {
+    if (itemQuantity > 0 && item) {
       addItem(itemQuantity);
+      addToCart({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        image: item.imageURL,
+        quantity: itemQuantity,
+      });
     }
     setShowToSlide();
     setShowGoToCartButton(true);
@@ -38,6 +56,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
   };
   const handleCloseDrawer = () => {
     onClose();
+    setSelectedItem(null);
   };
   return (
     <>
@@ -61,8 +80,8 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
             <div className="flex h-fit flex-col rounded-sm p-0">
               <div>
                 <img
-                  src={item.imageURL}
-                  alt={item.name}
+                  src={selectedItem?.imageURL}
+                  alt={selectedItem?.name}
                   width="400"
                   height="400"
                   className="h-[180px] rounded-xl object-cover"
@@ -71,19 +90,21 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
               <div className="mt-2 flex flex-col text-black">
                 <div className="flex flex-col gap-2 px-2 font-cairo">
                   <div className="flex items-center justify-between">
-                    <p className="font-cairo text-xl font-bold">{item.name}</p>
+                    <p className="font-cairo text-xl font-bold">
+                      {selectedItem?.name}
+                    </p>
                   </div>
                   <div className="flex w-[100px] items-center justify-center rounded-xl bg-[#F2C5AE] py-1 text-sm text-[#F37554]">
-                    <span>{item.calories} calories</span>
+                    <span>{selectedItem?.calories} calories</span>
                   </div>
                   <p className="text-sm">{item.description}</p>
                   <div className="mb-1 flex items-center justify-between gap-2">
                     <div className="relative flex items-center justify-center gap-1">
                       <span className="text-center text-sm font-semibold">
-                        SR {item.discountedPrice}{" "}
+                        SR {selectedItem?.discountedPrice}{" "}
                       </span>
                       <span className="text-sm line-through">
-                        SR {item.price}
+                        SR {selectedItem?.price}
                       </span>
                     </div>
                     <div className="rounded-xl px-2">
@@ -101,7 +122,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
                               <LuMinus size={14} />
                             </button>
                             <span className="mx-2">{itemQuantity}</span>
-                            <button onClick={increment}>
+                            <button onClick={() => increaseQuantity(item.id)}>
                               <GoPlus size={16} />
                             </button>
                           </div>
