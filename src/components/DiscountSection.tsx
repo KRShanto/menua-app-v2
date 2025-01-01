@@ -30,9 +30,8 @@ const discountData = [
 export default function DiscountSection() {
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const { itemQuantity, increment, decrement, showToSlide } =
+  const { cart, increaseQuantity, decreaseQuantity, showToSlide } =
     useAddToCartStore();
-
   const handleItemClick = (item: MenuItem) => {
     setSelectedItem(item);
     setDrawerOpen(true);
@@ -42,7 +41,10 @@ export default function DiscountSection() {
     setDrawerOpen(false);
     setSelectedItem(null);
   };
-
+  const getItemQuantity = (itemId: string) => {
+    const itemInCart = cart.find((cartItem) => cartItem.id === itemId);
+    return itemInCart?.quantity || 0;
+  };
   return (
     <div>
       {discountData.map((discount, index) => (
@@ -55,50 +57,59 @@ export default function DiscountSection() {
 
           {/* Item List */}
           <ul className="mt-2 flex gap-3 overflow-x-scroll">
-            {discount.items.map((item) => (
-              <li
-                key={item.name}
-                className="relative min-w-[16rem]"
-                onClick={() => handleItemClick(item)}
-              >
-                <img
-                  src={item.imageURL}
-                  alt={item.name}
-                  className="h-1/2 w-full rounded-tl-xl rounded-tr-xl"
-                />
-                <div className="h-1/2 rounded-bl-xl rounded-br-xl bg-[#1F1F20] p-4">
-                  <h3 className="text-lg text-foregroundColor">{item.name}</h3>
-                  <p className="-mb-16 mt-5 text-foregroundColor">
-                    SR {item.price}
-                    <span className="ml-3 text-sm line-through opacity-60">
-                      SR {item.price * (1 - discount.discountRate / 100)}
-                    </span>
-                  </p>
-                </div>
-
-                {/* Discount Tag */}
-                <div className="absolute left-4 top-4 flex items-center gap-2 rounded-full bg-foregroundColor px-2 py-1 text-black">
-                  <FaTags />
-                  {discount.discountRate}% Off
-                </div>
-
-                {/* Add button */}
-                {itemQuantity === 0 || !showToSlide ? (
-                  <button
-                    className="absolute right-3 top-[40%] flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black"
-                    // onClick={add}
-                  >
-                    Add <GoPlus />
-                  </button>
-                ) : (
-                  <div className="absolute right-3 top-[40%] flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black">
-                    <button onClick={decrement}>-</button>
-                    <span>{itemQuantity}</span>
-                    <button onClick={increment}>+</button>
+            {discount.items.map((item) => {
+              const itemQuantity = getItemQuantity(item.id);
+              return (
+                <li
+                  key={item.name}
+                  className="relative min-w-[16rem]"
+                  onClick={() => handleItemClick(item)}
+                >
+                  <img
+                    src={item.imageURL}
+                    alt={item.name}
+                    className="h-1/2 w-full rounded-tl-xl rounded-tr-xl"
+                  />
+                  <div className="h-1/2 rounded-bl-xl rounded-br-xl bg-[#1F1F20] p-4">
+                    <h3 className="text-lg text-foregroundColor">
+                      {item.name}
+                    </h3>
+                    <p className="-mb-16 mt-5 text-foregroundColor">
+                      SR {item.price}
+                      <span className="ml-3 text-sm line-through opacity-60">
+                        SR {item.price * (1 - discount.discountRate / 100)}
+                      </span>
+                    </p>
                   </div>
-                )}
-              </li>
-            ))}
+
+                  {/* Discount Tag */}
+                  <div className="absolute left-4 top-4 flex items-center gap-2 rounded-full bg-foregroundColor px-2 py-1 text-black">
+                    <FaTags />
+                    {discount.discountRate}% Off
+                  </div>
+
+                  {/* Add button */}
+                  {itemQuantity === 0 || !showToSlide ? (
+                    <button
+                      className="absolute right-3 top-[40%] flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black"
+                      // onClick={add}
+                    >
+                      Add <GoPlus />
+                    </button>
+                  ) : (
+                    <div className="absolute right-3 top-[40%] flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black">
+                      <button onClick={() => decreaseQuantity(item.id)}>
+                        -
+                      </button>
+                      <span>{itemQuantity}</span>
+                      <button onClick={() => increaseQuantity(item.id)}>
+                        +
+                      </button>
+                    </div>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </div>
       ))}

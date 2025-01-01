@@ -4,24 +4,20 @@ import { create } from "zustand";
 
 interface StoreState {
   cart: CartItem[];
-  itemQuantity: number;
+
   showToSlide?: boolean;
   selectedItem: MenuItem | null;
   addToCart: (item: CartItem) => void;
-  add: () => void;
-  addItem: (item: number) => void;
-  increment: () => void;
-  decrement: () => void;
   increaseQuantity: (id: string) => void;
   decreaseQuantity: (id: string) => void;
   setShowToSlide: () => void;
-  reset: () => void;
+  // reset: () => void;
   setSelectedItem: (item: MenuItem | null) => void;
 }
 
 export const useAddToCartStore = create<StoreState>((set) => ({
   cart: [],
-  itemQuantity: 0,
+
   showToSlide: false,
   selectedItem: null,
   addToCart: (item) =>
@@ -30,11 +26,16 @@ export const useAddToCartStore = create<StoreState>((set) => ({
       if (existingItem) {
         return {
           cart: state.cart.map((i) =>
-            i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i,
+            i.id === item.id
+              ? { ...i, quantity: item.quantity } // set new quantity
+              : i,
           ),
         };
       } else {
-        return { cart: [...state.cart, { ...item, quantity: 1 }] };
+        return {
+          // Use whatever quantity item already has
+          cart: [...state.cart, { ...item, quantity: item.quantity }],
+        };
       }
     }),
   increaseQuantity: (id) =>
@@ -51,11 +52,8 @@ export const useAddToCartStore = create<StoreState>((set) => ({
           : item,
       ),
     })),
-  add: () => set({ itemQuantity: 1 }),
-  addItem: (item) => set({ itemQuantity: item }),
-  increment: () => set((state) => ({ itemQuantity: state.itemQuantity + 1 })),
-  decrement: () => set((state) => ({ itemQuantity: state.itemQuantity - 1 })),
+
   setShowToSlide: () => set({ showToSlide: true }),
-  reset: () => set({ itemQuantity: 0 }),
+
   setSelectedItem: (item) => set({ selectedItem: item }),
 }));

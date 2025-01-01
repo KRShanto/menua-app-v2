@@ -6,7 +6,6 @@ import { GoPlus } from "react-icons/go";
 import { LuMinus } from "react-icons/lu";
 import { useAddToCartStore } from "@/stores/useAddToCart";
 import { useNavigate } from "react-router-dom";
-// import { useCartStore } from "@/stores/cart";
 
 interface BottomDrawerProps {
   item?: MenuItem | null;
@@ -15,33 +14,40 @@ interface BottomDrawerProps {
 }
 
 const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
+  const [itemQuantity, setItemQuantity] = useState(0);
   const [cartActivated, setCartActivated] = useState(false);
-
   const [showGoToCartButton, setShowGoToCartButton] = useState(false);
+
   const {
-    itemQuantity,
-    add,
-    increaseQuantity,
-    decrement,
-    setShowToSlide,
-    addItem,
-    selectedItem,
-    setSelectedItem,
+    cart,
     addToCart,
+    increaseQuantity,
+    decreaseQuantity,
+    setShowToSlide,
+    selectedItem,
   } = useAddToCartStore();
 
+  const itemInCart = cart.find((cartItem) => cartItem.id === item?.id);
   const navigatetoCart = useNavigate();
+
   useEffect(() => {
-    if (itemQuantity > 0) {
-      setCartActivated(true);
-    } else {
-      setCartActivated(false);
-    }
+    setCartActivated(itemQuantity > 0);
   }, [itemQuantity]);
+
+  useEffect(() => {
+    if (item && itemInCart) {
+      setItemQuantity(itemInCart.quantity);
+    } else {
+      setItemQuantity(0);
+    }
+  }, [item, itemInCart]);
+
+  const handleIncrement = () => setItemQuantity((prev) => prev + 1);
+  const handleDecrement = () =>
+    setItemQuantity((prev) => (prev > 0 ? prev - 1 : 0));
 
   const handleAddToCart = () => {
     if (itemQuantity > 0 && item) {
-      addItem(itemQuantity);
       addToCart({
         id: item.id,
         name: item.name,
@@ -49,14 +55,21 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
         image: item.imageURL,
         quantity: itemQuantity,
       });
+      setShowToSlide();
+      setShowGoToCartButton(true);
     }
-    setShowToSlide();
-    setShowGoToCartButton(true);
+
     onClose();
   };
+
   const handleCloseDrawer = () => {
     onClose();
-    setSelectedItem(null);
+    // resets local quantity if user closes without adding
+    if (itemInCart) {
+      setItemQuantity(itemInCart.quantity);
+    } else {
+      setItemQuantity(0);
+    }
   };
   return (
     <>
@@ -101,33 +114,44 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
                   <div className="mb-1 flex items-center justify-between gap-2">
                     <div className="relative flex items-center justify-center gap-1">
                       <span className="text-center text-sm font-semibold">
-                        SR {selectedItem?.discountedPrice}{" "}
+                        SR{" "}
+                        {selectedItem?.discountedPrice || selectedItem?.price}
                       </span>
-                      <span className="text-sm line-through">
-                        SR {selectedItem?.price}
-                      </span>
+                      {selectedItem?.discountedPrice && (
+                        <span className="text-sm line-through">
+                          SR {selectedItem?.price}
+                        </span>
+                      )}
                     </div>
                     <div className="rounded-xl px-2">
-                      <div>
-                        {itemQuantity === 0 ? (
-                          <button
-                            className="flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black"
-                            onClick={add}
-                          >
-                            Add <GoPlus size={16} />
+                      {itemInCart ? (
+                        <div className="flex items-center rounded-full bg-[#D87E27] px-4 py-1 text-black">
+                          <button onClick={() => decreaseQuantity(item.id)}>
+                            <LuMinus size={14} />
                           </button>
-                        ) : (
-                          <div className="flex items-center rounded-full bg-[#D87E27] px-4 py-1 text-black">
-                            <button className="" onClick={decrement}>
-                              <LuMinus size={14} />
-                            </button>
-                            <span className="mx-2">{itemQuantity}</span>
-                            <button onClick={() => increaseQuantity(item.id)}>
-                              <GoPlus size={16} />
-                            </button>
-                          </div>
-                        )}
-                      </div>
+                          <span className="mx-2">{itemInCart.quantity}</span>
+                          <button onClick={() => increaseQuantity(item.id)}>
+                            <GoPlus size={16} />
+                          </button>
+                        </div>
+                      ) : itemQuantity === 0 ? (
+                        <button
+                          className="flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black"
+                          onClick={handleIncrement}
+                        >
+                          Add <GoPlus size={16} />
+                        </button>
+                      ) : (
+                        <div className="flex items-center rounded-full bg-[#D87E27] px-4 py-1 text-black">
+                          <button className="" onClick={handleDecrement}>
+                            <LuMinus size={14} />
+                          </button>
+                          <span className="mx-2">{itemQuantity}</span>
+                          <button onClick={handleIncrement}>
+                            <GoPlus size={16} />
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
