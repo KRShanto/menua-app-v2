@@ -1,11 +1,9 @@
 "use client";
-// import { Button } from "@/components/ui/button";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { MdDiscount } from "react-icons/md";
 import BottomDrawer from "./BottomDrawer";
-import { fetchMenuData, MenuItem } from "@/lib/firebase"; // Import the fetchMenuData function
-import { MenuCategory } from "@/lib/firebase";
+import { fetchMenuData, MenuItem, MenuCategory } from "@/lib/firebase"; // Import the fetchMenuData function
 import { useAddToCartStore } from "@/stores/useAddToCart";
 import { GoPlus } from "react-icons/go";
 import { LuMinus } from "react-icons/lu";
@@ -36,10 +34,6 @@ export default function CategoryPage() {
     fetchData();
   }, [categoryId]);
 
-  if (!category) {
-    return <div className="container p-4">Category not found.</div>;
-  }
-
   const handleItemClick = (item: MenuItem) => {
     setSelectedItem(item);
     setDrawerOpen(true);
@@ -54,16 +48,16 @@ export default function CategoryPage() {
       <div className="relative">
         <div className="absolute inset-0 bg-black/80" />
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-2xl text-white">
-          {category.title}
+          {category?.title}
         </div>
         <img
-          src={category.imageURL}
-          alt={category.title}
+          src={category?.imageURL}
+          alt={category?.title}
           className="h-64 w-full rounded-md object-cover"
         />
       </div>
       <div className="mx-auto w-full max-w-md space-y-2 p-4">
-        {category.items.map((item) => {
+        {category?.items.map((item) => {
           const itemCart = cart.find((catItem) => catItem.id === item.id);
           return (
             <div
