@@ -1,10 +1,11 @@
+import { useAddToCartStore } from "@/stores/useAddToCart";
 import { BsCart } from "react-icons/bs";
-import { useCartStore } from "../stores/cart";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 export default function MenuCart() {
-  const { cart, increaseQuantity, decreaseQuantity } = useCartStore();
+  const { cart, increaseQuantity, decreaseQuantity } =
+    useAddToCartStore();
   const navigate = useNavigate();
 
   return (
@@ -32,9 +33,10 @@ export default function MenuCart() {
                   <button onClick={() => decreaseQuantity(item.id)}>
                     <FaMinus size={6} />
                   </button>
-                  <span>
+                  {/* <span>
                     {cart.find((i) => i.id === item.id)?.quantity || 0}
-                  </span>
+                  </span> */}
+                  <span className="mx-2">{item.quantity}</span>
                   <button onClick={() => increaseQuantity(item.id)}>
                     <FaPlus size={8} />
                   </button>
