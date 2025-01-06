@@ -13,17 +13,11 @@ import {
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { getDownloadURL, ref } from "firebase/storage";
 
-interface EnhancedMenuItem extends MenuItem {
-  image: string;
-  discountRate: number;
-}
-
 export default function DiscountSection() {
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const { cart, increaseQuantity, decreaseQuantity, showToSlide } =
-    useAddToCartStore();
-  const [discountData, setDiscountData] = useState<EnhancedMenuItem[]>([]);
+  const { cart, increaseQuantity, decreaseQuantity } = useAddToCartStore();
+  const [discountData, setDiscountData] = useState<MenuItem[]>([]);
 
   useEffect(() => {
     const fetchDiscounts = async () => {
@@ -41,22 +35,20 @@ export default function DiscountSection() {
             doc(db, MENU_COLLECTION, discount.itemId),
           );
           const menuItems = itemSnapshot?.data() as MenuItem;
+          menuItems.id = itemSnapshot.id;
 
           console.log("Menu items: ", menuItems);
 
           // download image
           const storageRef = ref(storage, menuItems.imageURL);
           const imageUrl = await getDownloadURL(storageRef);
+
           menuItems.imageURL = imageUrl;
 
           // add discount rate
-          const enhancedItem: EnhancedMenuItem = {
-            ...menuItems,
-            image: imageUrl,
-            discountRate: discount.rate,
-          };
+          menuItems.discountPercentage = discount.rate;
 
-          return enhancedItem;
+          return menuItems;
         }),
       );
 
@@ -70,6 +62,7 @@ export default function DiscountSection() {
   console.log("Discount data: ", discountData);
 
   const handleItemClick = (item: MenuItem) => {
+    console.log("Item ID: ", item.id);
     setSelectedItem(item);
     setDrawerOpen(true);
   };
@@ -78,10 +71,7 @@ export default function DiscountSection() {
     setDrawerOpen(false);
     setSelectedItem(null);
   };
-  const getItemQuantity = (itemId: string) => {
-    const itemInCart = cart.find((cartItem) => cartItem.id === itemId);
-    return itemInCart ? itemInCart.quantity : 0;
-  };
+
   return (
     <div>
       <div className="p-4">
@@ -93,23 +83,24 @@ export default function DiscountSection() {
 
         {/* Item List */}
         <ul className="mt-2 flex gap-3 overflow-x-scroll">
-          {discountData.map((item: any) => {
-            const itemQuantity = getItemQuantity(item.id);
+          {discountData.map((item: MenuItem) => {
+            const itemCart = cart.find((catItem) => catItem.id === item.id);
             return (
               <li
                 key={item.name}
-                className="relative min-w-[16rem]"
+                className="relative min-w-[16rem] rounded-xl border border-gray-700"
                 onClick={() => handleItemClick(item)}
               >
                 <img
                   src={item.imageURL}
                   alt={item.name}
                   className="h-1/2 w-full rounded-tl-xl rounded-tr-xl"
+                  style={{ objectFit: "contain" }}
                 />
                 <div className="h-1/2 rounded-bl-xl rounded-br-xl bg-[#1F1F20] p-4">
                   <h3 className="text-lg text-foregroundColor">{item.name}</h3>
                   <p className="-mb-16 mt-5 text-foregroundColor">
-                    SR {item.price * (1 - item.discountRate / 100)}
+                    SR {item.price * (1 - item.discountPercentage / 100)}
                     <span className="ml-3 text-sm line-through opacity-60">
                       SR {item.price}
                     </span>
@@ -119,11 +110,11 @@ export default function DiscountSection() {
                 {/* Discount Tag */}
                 <div className="absolute left-4 top-4 flex items-center gap-2 rounded-full bg-foregroundColor px-2 py-1 text-black">
                   <FaTags />
-                  {item.discountRate}% Off
+                  {item.discountPercentage}% Off
                 </div>
 
                 {/* Add button */}
-                {itemQuantity === 0 || !showToSlide ? (
+                {!itemCart ? (
                   <button
                     className="absolute right-3 top-[40%] flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black"
                     // onClick={add}
@@ -140,7 +131,7 @@ export default function DiscountSection() {
                     >
                       -
                     </button>
-                    <span>{itemQuantity}</span>
+                    <span>{itemCart.quantity}</span>
                     <button
                       onClick={(e) => {
                         e.stopPropagation();

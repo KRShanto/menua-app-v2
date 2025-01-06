@@ -22,11 +22,12 @@ import {
 } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { RiFeedbackFill } from "react-icons/ri";
+import FormDrawer from "./FormDrawer";
 
 const menuItems = [
   { icon: FaHome, label: "Home Page", href: "/" },
-  { icon: FaShoppingCart, label: "Menu Cart", href: "#" },
-  { icon: RiFeedbackFill, label: "Feedback", href: "#" },
+  { icon: FaShoppingCart, label: "Menu Cart", href: "/cart" },
+  { icon: RiFeedbackFill, label: "Feedback", onClick: () => {} },
 ];
 
 const collapsibleItemsData = [
@@ -76,7 +77,16 @@ const collapsibleItemsData = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [collapsibleItems, setCollapsibleItems] = useState<string | null>(null);
+  const [isFormDrawerOpen, setIsFormDrawerOpen] = useState(false);
 
+  const handleOpenFormDrawer = () => {
+    setIsFormDrawerOpen(true);
+    setIsOpen(false);
+  };
+
+  const handleCloseFormDrawer = () => {
+    setIsFormDrawerOpen(false);
+  };
   return (
     <>
       <button onClick={() => setIsOpen(true)}>
@@ -97,18 +107,33 @@ export default function Navbar() {
         </button>
 
         <nav className="mt-8 space-y-6">
-          {menuItems.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              className="flex items-center gap-3 px-5 text-zinc-900"
-            >
-              <span className="flex items-center gap-2 text-xl">
-                <item.icon />
-                {item.label}
-              </span>
-            </a>
-          ))}
+          {menuItems.map((item) =>
+            item.href ? (
+              <a
+                key={item.label}
+                href={item.href}
+                className="flex items-center gap-3 px-5 text-zinc-900"
+              >
+                <span className="flex items-center gap-2 text-xl">
+                  <item.icon />
+                  {item.label}
+                </span>
+              </a>
+            ) : (
+              <div
+                key={item.label}
+                className="flex cursor-pointer items-center gap-3 px-5 text-zinc-900"
+                onClick={
+                  item.label === "Feedback" ? handleOpenFormDrawer : undefined
+                }
+              >
+                <span className="flex items-center gap-2 text-xl">
+                  <item.icon />
+                  {item.label}
+                </span>
+              </div>
+            ),
+          )}
 
           {collapsibleItemsData.map((item) => (
             <Collapsible key={item.id} open={collapsibleItems === item.id}>
@@ -161,6 +186,10 @@ export default function Navbar() {
           )}
         </div>
       </div>
+
+      {isFormDrawerOpen && (
+        <FormDrawer open={isFormDrawerOpen} onClose={handleCloseFormDrawer} />
+      )}
     </>
   );
 }

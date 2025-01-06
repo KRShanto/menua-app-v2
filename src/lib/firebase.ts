@@ -61,7 +61,9 @@ export interface Discount {
   discountPercentage: number;
 }
 
-export const fetchMenuData = async (): Promise<MenuCategory[]> => {
+export const fetchMenuData = async (
+  filterCombo: boolean = false,
+): Promise<MenuCategory[]> => {
   const menuCollection = collection(db, MENU_COLLECTION);
   const discountCollection = collection(db, DISCOUNT_COLLECTION);
 
@@ -118,5 +120,11 @@ export const fetchMenuData = async (): Promise<MenuCategory[]> => {
     menuCategories[item.category].items.push(item);
   });
 
-  return Object.values(menuCategories);
+  const categories = Object.values(menuCategories);
+
+  if (filterCombo) {
+    return categories.filter((category) => category.title.includes("Combo"));
+  }
+
+  return categories.filter((category) => !category.title.includes("Combo"));
 };

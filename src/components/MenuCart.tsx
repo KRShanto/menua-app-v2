@@ -1,12 +1,21 @@
 import { useAddToCartStore } from "@/stores/useAddToCart";
 import { BsCart } from "react-icons/bs";
 import { FaMinus, FaPlus } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function MenuCart() {
-  const { cart, increaseQuantity, decreaseQuantity } =
-    useAddToCartStore();
+  const { cart, increaseQuantity, decreaseQuantity } = useAddToCartStore();
   const navigate = useNavigate();
+  const location = useLocation();
+  const categoryId = location.state?.categoryId;
+
+  const handleGoToMenu = () => {
+    if (categoryId) {
+      navigate(`/category/${categoryId}`);
+    } else {
+      navigate("/");
+    }
+  };
 
   return (
     <section className="text-foregroundColor">
@@ -52,7 +61,7 @@ export default function MenuCart() {
         <div className="flex justify-end gap-3">
           <button
             className="rounded-lg bg-black px-10 py-3 text-sm text-[#F2E7D4]"
-            onClick={() => navigate("/")}
+            onClick={handleGoToMenu}
           >
             Go to Menu
           </button>

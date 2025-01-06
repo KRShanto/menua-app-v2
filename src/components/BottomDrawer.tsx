@@ -24,7 +24,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
     increaseQuantity,
     decreaseQuantity,
     setShowToSlide,
-    selectedItem,
   } = useAddToCartStore();
 
   const itemInCart = cart.find((cartItem) => cartItem.id === item?.id);
@@ -41,6 +40,11 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
       setItemQuantity(0);
     }
   }, [item, itemInCart]);
+
+  useEffect(() => {
+    const hasItemsInCart = cart.some((cartItem) => cartItem.quantity > 0);
+    setShowGoToCartButton(hasItemsInCart);
+  }, [cart]);
 
   const handleIncrement = () => setItemQuantity((prev) => prev + 1);
   const handleDecrement = () =>
@@ -65,11 +69,12 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
   const handleCloseDrawer = () => {
     onClose();
     // resets local quantity if user closes without adding
-    if (itemInCart) {
-      setItemQuantity(itemInCart.quantity);
-    } else {
-      setItemQuantity(0);
-    }
+    // if (itemInCart) {
+    //   setItemQuantity(itemInCart.quantity);
+    // } else {
+    //   setItemQuantity(0);
+    // }
+    setItemQuantity(0);
   };
   return (
     <>
@@ -93,8 +98,8 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
             <div className="flex h-fit flex-col rounded-sm p-0">
               <div>
                 <img
-                  src={selectedItem?.imageURL}
-                  alt={selectedItem?.name}
+                  src={item.imageURL}
+                  alt={item.name}
                   width="400"
                   height="400"
                   className="h-[180px] rounded-xl object-cover"
@@ -103,25 +108,21 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
               <div className="mt-2 flex flex-col text-black">
                 <div className="flex flex-col gap-2 px-2 font-cairo">
                   <div className="flex items-center justify-between">
-                    <p className="font-cairo text-xl font-bold">
-                      {selectedItem?.name}
-                    </p>
+                    <p className="font-cairo text-xl font-bold">{item.name}</p>
                   </div>
                   <div className="flex w-[100px] items-center justify-center rounded-xl bg-[#F2C5AE] py-1 text-sm text-[#F37554]">
-                    <span>{selectedItem?.calories} calories</span>
+                    <span>{item.calories} calories</span>
                   </div>
                   <p className="text-sm">{item.description}</p>
                   <div className="mb-1 flex items-center justify-between gap-2">
                     <div className="relative flex items-center justify-center gap-1">
                       <span className="text-center text-sm font-semibold">
-                        SR{" "}
-                        {selectedItem?.discountedPrice || selectedItem?.price}
+                        SR {item.price * (1 - item.discountPercentage / 100)}
                       </span>
-                      {selectedItem?.discountedPrice && (
-                        <span className="text-sm line-through">
-                          SR {selectedItem?.price}
-                        </span>
-                      )}
+
+                      <span className="text-sm line-through">
+                        SR {item.price}
+                      </span>
                     </div>
                     <div className="rounded-xl px-2">
                       {itemInCart ? (
@@ -177,7 +178,9 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
           <button
             className="flex w-[340px] items-center justify-center rounded-lg bg-[#D87E27] py-3 text-sm text-[#F2E7D4]"
             onClick={() => {
-              navigatetoCart("/cart");
+              navigatetoCart("/cart", {
+                state: { categoryId: item?.category },
+              });
             }}
           >
             <span>Go to Cart</span>
