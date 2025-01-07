@@ -1,17 +1,15 @@
 import HomeNavigation from "./components/HomeNavigation";
 import Header from "./components/Header";
 import DiscountSection from "./components/DiscountSection";
-import HeaderSearch from "./components/HeaderSearch";
+// import HeaderSearch from "./components/HeaderSearch";
 import { useLocation } from "react-router-dom";
 
-interface LayoutProps { 
+interface LayoutProps {
   onViewChange: (view: "menu" | "combo") => void;
   children: React.ReactNode;
-  
 }
 
 export default function Layout({ children, onViewChange }: LayoutProps) {
-  
   const location = useLocation();
 
   const showHomeSection = location.pathname === "/";
@@ -22,7 +20,7 @@ export default function Layout({ children, onViewChange }: LayoutProps) {
       <main className="mx-auto max-w-2xl pb-20">
         {showHomeSection && (
           <>
-            <HeaderSearch />
+            {/* <HeaderSearch /> */}
             <DiscountSection />
             <HomeNavigation onViewChange={onViewChange} />
           </>

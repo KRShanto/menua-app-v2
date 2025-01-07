@@ -23,10 +23,11 @@ import {
 import { FaLocationDot } from "react-icons/fa6";
 import { RiFeedbackFill } from "react-icons/ri";
 import FormDrawer from "./FormDrawer";
+import { useNavigate } from "react-router-dom";
 
 const menuItems = [
-  { icon: FaHome, label: "Home Page", href: "/" },
-  { icon: FaShoppingCart, label: "Menu Cart", href: "/cart" },
+  { icon: FaHome, label: "Home Page", path: "/" },
+  { icon: FaShoppingCart, label: "Menu Cart", path: "/cart" },
   { icon: RiFeedbackFill, label: "Feedback", onClick: () => {} },
 ];
 
@@ -78,7 +79,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [collapsibleItems, setCollapsibleItems] = useState<string | null>(null);
   const [isFormDrawerOpen, setIsFormDrawerOpen] = useState(false);
-
+  const navigate = useNavigate();
   const handleOpenFormDrawer = () => {
     setIsFormDrawerOpen(true);
     setIsOpen(false);
@@ -86,6 +87,10 @@ export default function Navbar() {
 
   const handleCloseFormDrawer = () => {
     setIsFormDrawerOpen(false);
+  };
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    setIsOpen(false);
   };
   return (
     <>
@@ -108,17 +113,17 @@ export default function Navbar() {
 
         <nav className="mt-8 space-y-6">
           {menuItems.map((item) =>
-            item.href ? (
-              <a
+            item.path ? (
+              <div
                 key={item.label}
-                href={item.href}
-                className="flex items-center gap-3 px-5 text-zinc-900"
+                className="flex cursor-pointer items-center gap-3 px-5 text-zinc-900"
+                onClick={() => handleNavigation(item.path)}
               >
                 <span className="flex items-center gap-2 text-xl">
                   <item.icon />
                   {item.label}
                 </span>
-              </a>
+              </div>
             ) : (
               <div
                 key={item.label}
@@ -184,6 +189,19 @@ export default function Navbar() {
               </a>
             ),
           )}
+        </div>
+        <div className="absolute bottom-2 left-0 right-0 flex justify-center">
+          <p className="text-center text-sm text-zinc-900">
+            Developed by{" "}
+            <a
+              href="https://levantitsolution.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-bold text-orange-500"
+            >
+              Levant IT Solution
+            </a>
+          </p>
         </div>
       </div>
 

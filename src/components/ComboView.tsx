@@ -43,8 +43,14 @@ export default function ComboView() {
   const [comboData, setComboData] = useState<MenuCategory[]>([]);
 
   useEffect(() => {
-    fetchMenuData(true).then((data) => setComboData(data));
+    fetchMenuData().then((data) => {
+      const comboCategories = data.filter((category) =>
+        category.title.includes("Combo"),
+      );
+      setComboData(comboCategories);
+    });
   }, []);
+
   const handleCategorySelect = (category: MenuCategory) => {
     navigate(`/category/${category.title}`);
   };

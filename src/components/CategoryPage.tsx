@@ -22,13 +22,14 @@ export default function CategoryPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const menuData = await fetchMenuData();
-      const categoryData = menuData.find(
-        (category) => category.title == categoryId,
+      const data = await fetchMenuData();
+      console.log("Fetched Data: ", data);
+      const selectedCategory = data.find(
+        (category) =>
+          category.title.toLowerCase() === categoryId?.toLowerCase(),
       );
-      console.log("One menu data: ", menuData);
-
-      setCategory(categoryData || null);
+      console.log("Selected Category: ", selectedCategory);
+      setCategory(selectedCategory || null);
     };
 
     fetchData();
