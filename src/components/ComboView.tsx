@@ -45,7 +45,7 @@ export default function ComboView() {
   useEffect(() => {
     fetchMenuData().then((data) => {
       const comboCategories = data.filter((category) =>
-        category.title.includes("Combo"),
+        category.title.toLowerCase().includes("combo"),
       );
       setComboData(comboCategories);
     });

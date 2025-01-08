@@ -191,7 +191,7 @@ export default function Navbar() {
           )}
         </div>
         <div className="absolute bottom-2 left-0 right-0 flex justify-center">
-          <p className="text-center text-sm text-zinc-900">
+          <p className="text-center text-xs text-zinc-900">
             Developed by{" "}
             <a
               href="https://levantitsolution.com/"

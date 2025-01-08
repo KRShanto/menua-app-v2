@@ -8,7 +8,12 @@ export default function MenuView() {
   const [menuData, setMenuData] = useState<MenuCategory[]>([]);
 
   useEffect(() => {
-    fetchMenuData().then((data) => setMenuData(data));
+    fetchMenuData().then((data) => {
+      const filteredData = data.filter(
+        (category) => !category.title.toLowerCase().includes("combo"),
+      );
+      setMenuData(filteredData);
+    });
   }, []);
 
   const handleCategorySelect = (category: MenuCategory) => {
