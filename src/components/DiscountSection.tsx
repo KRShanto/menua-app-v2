@@ -100,7 +100,10 @@ export default function DiscountSection() {
                 <div className="h-1/2 rounded-bl-xl rounded-br-xl bg-[#1F1F20] p-4">
                   <h3 className="text-lg text-foregroundColor">{item.name}</h3>
                   <p className="-mb-16 mt-5 text-foregroundColor">
-                    SR {item.price * (1 - item.discountPercentage / 100)}
+                    SR{" "}
+                    {(item.price * (1 - item.discountPercentage / 100)).toFixed(
+                      2,
+                    )}
                     <span className="ml-3 text-sm line-through opacity-60">
                       SR {item.price}
                     </span>

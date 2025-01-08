@@ -68,12 +68,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
 
   const handleCloseDrawer = () => {
     onClose();
-    // resets local quantity if user closes without adding
-    // if (itemInCart) {
-    //   setItemQuantity(itemInCart.quantity);
-    // } else {
-    //   setItemQuantity(0);
-    // }
     setItemQuantity(0);
   };
   return (
@@ -116,13 +110,24 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
                   <p className="text-sm">{item.description}</p>
                   <div className="mb-1 flex items-center justify-between gap-2">
                     <div className="relative flex items-center justify-center gap-1">
-                      <span className="text-center text-sm font-semibold">
-                        SR {item.price * (1 - item.discountPercentage / 100)}
-                      </span>
-
-                      <span className="text-sm line-through">
-                        SR {item.price}
-                      </span>
+                      {item.discountPercentage ? (
+                        <>
+                          <span className="text-sm font-semibold">
+                            SR{" "}
+                            {(
+                              item.price *
+                              (1 - item.discountPercentage / 100)
+                            ).toFixed(2)}
+                          </span>
+                          <span className="text-sm line-through">
+                            SR {item.price}
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-center text-sm font-semibold">
+                          SR {item.price}
+                        </span>
+                      )}
                     </div>
                     <div className="rounded-xl px-2">
                       {itemInCart ? (
