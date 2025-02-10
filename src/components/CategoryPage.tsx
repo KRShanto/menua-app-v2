@@ -51,11 +51,11 @@ export default function CategoryPage() {
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-2xl text-white">
           {category?.title}
         </div>
-        <img
+        {/* <img
           src={category?.imageURL}
           alt={category?.title}
           className="h-64 w-full rounded-md object-cover"
-        />
+        /> */}
       </div>
       <div className="mx-auto w-full max-w-md space-y-2 p-4">
         {category?.items.map((item) => {
@@ -67,13 +67,13 @@ export default function CategoryPage() {
               onClick={() => handleItemClick(item)}
             >
               <div className="relative h-16 w-20 flex-shrink-0">
-                <img
+                {/* <img
                   src={item.imageURL}
                   alt={item.name}
                   width={80}
                   height={80}
                   className="h-16 rounded-lg object-cover"
-                />
+                /> */}
                 {item.discountPercentage && (
                   <div className="absolute left-0 top-0 rounded-full bg-foregroundColor px-1.5 py-0.5 text-xs text-white">
                     <div className="z-10 inline-flex items-center gap-1 text-black">

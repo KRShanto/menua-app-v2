@@ -27,11 +27,11 @@ export default function MenuCart() {
         {cart.map((item) => (
           <>
             <li key={item.id} className="mt-5 flex items-center gap-5 px-5">
-              <img
+              {/* <img
                 src={item.image}
                 alt={item.name}
                 className="h-16 w-16 rounded-lg"
-              />
+              /> */}
               <div className="flex w-full items-center justify-between">
                 <div>
                   <h3>{item.name}</h3>

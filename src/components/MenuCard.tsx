@@ -5,14 +5,14 @@ interface MenuCardProps {
   title: string;
   itemCount?: number;
   likes?: number;
-  imageURL: string;
+  // imageURL: string;
   className?: string;
   onClick?: () => void;
 }
 
 export default function MenuCard({
   title,
-  imageURL,
+  // imageURL,
   itemCount,
   likes,
   onClick,
@@ -24,13 +24,13 @@ export default function MenuCard({
         onClick={onClick}
       >
         <div>
-          <img
+          {/* <img
             src={imageURL}
             alt={title}
             width="400"
             height="400"
             className="h-[200px] rounded-xl object-cover"
-          />
+          /> */}
         </div>
         <div className="flex flex-col rounded-b-xl py-4 text-primaryText">
           <div className="flex flex-col gap-2 px-2">

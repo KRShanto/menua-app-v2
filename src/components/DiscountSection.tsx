@@ -7,11 +7,11 @@ import {
   db,
   DISCOUNT_COLLECTION,
   MENU_COLLECTION,
-  storage,
+  // storage,
   MenuItem,
 } from "@/lib/firebase";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
-import { getDownloadURL, ref } from "firebase/storage";
+// import { getDownloadURL, ref } from "firebase/storage";
 
 export default function DiscountSection() {
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
@@ -40,10 +40,10 @@ export default function DiscountSection() {
           console.log("Menu items: ", menuItems);
 
           // download image
-          const storageRef = ref(storage, menuItems.imageURL);
-          const imageUrl = await getDownloadURL(storageRef);
+          // const storageRef = ref(storage, menuItems.imageURL);
+          // const imageUrl = await getDownloadURL(storageRef);
 
-          menuItems.imageURL = imageUrl;
+          // menuItems.imageURL = imageUrl;
 
           // add discount rate
           menuItems.discountPercentage = discount.rate;
@@ -91,12 +91,12 @@ export default function DiscountSection() {
                 className="relative min-w-[16rem] rounded-xl border border-gray-700"
                 onClick={() => handleItemClick(item)}
               >
-                <img
+                {/* <img
                   src={item.imageURL}
                   alt={item.name}
                   className="h-1/2 w-full rounded-tl-xl rounded-tr-xl"
                   style={{ objectFit: "contain" }}
-                />
+                /> */}
                 <div className="h-1/2 rounded-bl-xl rounded-br-xl bg-[#1F1F20] p-4">
                   <h3 className="text-lg text-foregroundColor">{item.name}</h3>
                   <p className="-mb-16 mt-5 text-foregroundColor">

@@ -56,7 +56,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
         id: item.id,
         name: item.name,
         price: item.price,
-        image: item.imageURL,
+        // image: item.imageURL,
         quantity: itemQuantity,
       });
       setShowToSlide();
@@ -91,13 +91,13 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
           {item ? (
             <div className="flex h-fit flex-col rounded-sm p-0">
               <div>
-                <img
+                {/* <img
                   src={item.imageURL}
                   alt={item.name}
                   width="400"
                   height="400"
                   className="h-[180px] rounded-xl object-cover"
-                />
+                /> */}
               </div>
               <div className="mt-2 flex flex-col text-black">
                 <div className="flex flex-col gap-2 px-2 font-cairo">

@@ -5,7 +5,7 @@ export interface ItemTemplate {
   name: string;
   price: number;
   demoPrice?: number;
-  image: string;
+  // image: string;
   description: string;
   calories: string;
   likes?: string;
@@ -21,7 +21,7 @@ type MenuItem = {
   discountedPrice: number;
   discountPercentage: number;
   likes: string;
-  imageURL: string;
+  // imageURL: string;
 };
 
 type Category = {
@@ -29,7 +29,7 @@ type Category = {
   title: string;
   itemCount?: number;
   likes?: number;
-  imageUrl: string;
+  // imageUrl: string;
   items: MenuItem[];
 };
 

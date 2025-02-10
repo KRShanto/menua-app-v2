@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { collection, getDocs, getFirestore } from "firebase/firestore";
-import { getDownloadURL, getStorage, ref } from "firebase/storage";
+// import { getDownloadURL, getStorage, ref } from "firebase/storage";
+import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
@@ -19,9 +20,10 @@ export const auth = getAuth();
 
 export const STORAGE_BASE = import.meta.env.PROD ? "production" : "development";
 
-export const MENU_COLLECTION = import.meta.env.PROD
-  ? "production__menu"
-  : "development__menu";
+// export const MENU_COLLECTION = import.meta.env.PROD
+//   ? "production__menu"
+//   : "development__menu";
+export const MENU_COLLECTION = "production__menu";
 export const MENU_IMAGES = `${STORAGE_BASE}/menu-images`;
 
 export const DISCOUNT_COLLECTION = import.meta.env.PROD
@@ -58,13 +60,13 @@ export interface MenuItem {
   discountedPrice: number;
   discountPercentage: number;
   likes: string;
-  imageURL: string;
+  // imageURL: string;
 }
 
 export interface MenuCategory {
   title: string;
   items: MenuItem[];
-  imageURL: string;
+  // imageURL: string;  git remote get-url origin
 }
 
 export interface Discount {
@@ -112,8 +114,8 @@ export const fetchMenuData = async (): Promise<MenuCategory[]> => {
     }
 
     // Fetch the download URL for the image
-    const imageRef = ref(storage, item.imageURL);
-    item.imageURL = await getDownloadURL(imageRef);
+    // const imageRef = ref(storage, item.imageURL);
+    // item.imageURL = await getDownloadURL(imageRef);
   }
 
   const menuCategories: { [key: string]: MenuCategory } = {};
@@ -123,7 +125,7 @@ export const fetchMenuData = async (): Promise<MenuCategory[]> => {
       menuCategories[item.category] = {
         title: item.category,
         items: [],
-        imageURL: item.imageURL, // Use the first item's image as the category image
+        // imageURL: item.imageURL, // Use the first item's image as the category image
       };
     }
     menuCategories[item.category].items.push(item);
