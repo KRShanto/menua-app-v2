@@ -27,11 +27,11 @@ export default function MenuCart() {
         {cart.map((item) => (
           <>
             <li key={item.id} className="mt-5 flex items-center gap-5 px-5">
-              {/* <img
+              <img
                 src={item.image}
                 alt={item.name}
                 className="h-16 w-16 rounded-lg"
-              /> */}
+              />
               <div className="flex w-full items-center justify-between">
                 <div>
                   <h3>{item.name}</h3>
@@ -42,9 +42,9 @@ export default function MenuCart() {
                   <button onClick={() => decreaseQuantity(item.id)}>
                     <FaMinus size={6} />
                   </button>
-                  {/* <span>
+                  <span>
                     {cart.find((i) => i.id === item.id)?.quantity || 0}
-                  </span> */}
+                  </span>
                   <span className="mx-2">{item.quantity}</span>
                   <button onClick={() => increaseQuantity(item.id)}>
                     <FaPlus size={8} />

@@ -21,7 +21,7 @@ type MenuItem = {
   discountedPrice: number;
   discountPercentage: number;
   likes: string;
-  // imageURL: string;
+  imageURL: string;
 };
 
 type Category = {
@@ -29,7 +29,7 @@ type Category = {
   title: string;
   itemCount?: number;
   likes?: number;
-  // imageUrl: string;
+  imageUrl: string;
   items: MenuItem[];
 };
 

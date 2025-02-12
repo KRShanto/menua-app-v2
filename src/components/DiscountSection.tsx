@@ -91,12 +91,12 @@ export default function DiscountSection() {
                 className="relative min-w-[16rem] rounded-xl border border-gray-700"
                 onClick={() => handleItemClick(item)}
               >
-                {/* <img
+                <img
                   src={item.imageURL}
                   alt={item.name}
                   className="h-1/2 w-full rounded-tl-xl rounded-tr-xl"
                   style={{ objectFit: "contain" }}
-                /> */}
+                />
                 <div className="h-1/2 rounded-bl-xl rounded-br-xl bg-[#1F1F20] p-4">
                   <h3 className="text-lg text-foregroundColor">{item.name}</h3>
                   <p className="-mb-16 mt-5 text-foregroundColor">

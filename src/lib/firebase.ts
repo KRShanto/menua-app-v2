@@ -20,10 +20,10 @@ export const auth = getAuth();
 
 export const STORAGE_BASE = import.meta.env.PROD ? "production" : "development";
 
-// export const MENU_COLLECTION = import.meta.env.PROD
-//   ? "production__menu"
-//   : "development__menu";
-export const MENU_COLLECTION = "production__menu";
+export const MENU_COLLECTION = import.meta.env.PROD
+  ? "production__menu"
+  : "development__menu";
+// export const MENU_COLLECTION = "production__menu";
 export const MENU_IMAGES = `${STORAGE_BASE}/menu-images`;
 
 export const DISCOUNT_COLLECTION = import.meta.env.PROD
@@ -60,13 +60,13 @@ export interface MenuItem {
   discountedPrice: number;
   discountPercentage: number;
   likes: string;
-  // imageURL: string;
+  imageURL: string;
 }
 
 export interface MenuCategory {
   title: string;
   items: MenuItem[];
-  // imageURL: string;  git remote get-url origin
+  imageURL: string;
 }
 
 export interface Discount {
@@ -125,7 +125,7 @@ export const fetchMenuData = async (): Promise<MenuCategory[]> => {
       menuCategories[item.category] = {
         title: item.category,
         items: [],
-        // imageURL: item.imageURL, // Use the first item's image as the category image
+        imageURL: item.imageURL, // Use the first item's image as the category image
       };
     }
     menuCategories[item.category].items.push(item);
