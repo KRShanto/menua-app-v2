@@ -88,15 +88,17 @@ export default function DiscountSection() {
             return (
               <li
                 key={item.name}
-                className="relative h-[20rem] min-w-[16rem] border"
+                className="relative h-[20rem] min-w-[16rem]"
                 onClick={() => handleItemClick(item)}
               >
                 <img
                   src={item.imageURL}
                   alt={item.name}
-                  className="h-[13rem] w-full rounded-tl-xl rounded-tr-xl object-cover"
+                  width="400"
+                  height="400"
+                  className="h-[200px] rounded-t-xl object-cover"
                 />
-                <div className="">
+                <div className="h-[7rem] rounded-bl-xl rounded-br-xl bg-[#1F1F20] p-4">
                   <h3 className="text-lg text-foregroundColor">{item.name}</h3>
                   <p className="-mb-16 mt-5 text-foregroundColor">
                     SR{" "}
@@ -118,7 +120,7 @@ export default function DiscountSection() {
                 {/* Add button */}
                 {!itemCart ? (
                   <button
-                    className="absolute right-3 top-[40%] flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black"
+                    className="absolute right-3 top-[80%] flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black"
                     // onClick={add}
                   >
                     Add <GoPlus />
