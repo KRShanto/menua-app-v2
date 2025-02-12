@@ -120,7 +120,7 @@ export default function DiscountSection() {
                 {/* Add button */}
                 {!itemCart ? (
                   <button
-                    className="absolute right-3 top-[80%] flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black"
+                    className="absolute right-3 top-[60%] flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black"
                     // onClick={add}
                   >
                     Add <GoPlus />
