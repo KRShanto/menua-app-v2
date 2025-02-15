@@ -1,9 +1,11 @@
-import React from "react";
+import { useState } from "react";
 import { Radio, Space } from "antd";
 import { LangType, ViewType } from "../types/menu";
 import { SizeType } from "antd/es/config-provider/SizeContext";
-import { AnyObject } from "antd/es/_util/type";
+import { CSSProperties } from "react";
+import { useLanguageStore } from "@/stores/language";
 
+// Define the props for the GroupButton component
 interface GroupButtonProps {
   padding: string;
   buttonTextOne: string;
@@ -16,6 +18,16 @@ interface GroupButtonProps {
   onViewChange?: (view: "menu" | "combo") => void;
   defaultPosition: string;
 }
+
+// Define default styles for the radio buttons to avoid repetition
+const defaultButtonStyle: CSSProperties = {
+  outline: "none",
+  borderColor: "#F2E7D4",
+  boxShadow: "none",
+  textAlign: "center",
+};
+
+// GroupButton component definition
 export default function GroupButton({
   padding,
   buttonTextOne,
@@ -28,65 +40,78 @@ export default function GroupButton({
   onViewChange,
   defaultPosition,
 }: GroupButtonProps) {
-  const [position, setPosition] = React.useState<LangType | ViewType | string>(
+  // Use React's useState hook to manage the selected position (default is defaultPosition)
+  const [position, setPosition] = useState<LangType | ViewType | string>(
     defaultPosition,
   );
-  const handleChange = (e: AnyObject) => {
-    setPosition(e.target.value);
+  const { setLanguage } = useLanguageStore();
+
+  // Determine if the first button is active based on the current position
+  const isFirstButtonActive =
+    position === "arabic" ||
+    position === "menu" ||
+    position === buttonTextOne.toLowerCase();
+  // Determine if the second button is active based on the current position
+  const isSecondButtonActive =
+    position === "eng" ||
+    position === "combo" ||
+    position === buttonTextTwo.toLowerCase();
+
+  // Handle the change event when a radio button is selected
+  const handleChange = (e: any) => {
+    const newValue = e.target.value; // Get the new value from the event
+    setPosition(newValue); // Update the position state with the new value
+
+    // If an onViewChange callback is provided, call it with the appropriate view value
     if (onViewChange) {
-      onViewChange(e.target.value === "menu" ? "menu" : "combo");
+      onViewChange(newValue === "menu" ? "menu" : "combo");
+    }
+
+    if (newValue === "arabic" || newValue === "eng") {
+      setLanguage(newValue);
     }
   };
+
+  // Render the component
   return (
     <Space>
+      {/* Radio button group */}
       <Radio.Group
         value={position}
         onChange={handleChange}
         size={buttonSize}
         className={groupClassName}
       >
+        {/* First radio button */}
         <Radio.Button
           value={buttonTextOne.toLowerCase()}
           style={{
-            backgroundColor:
-              position === "arabic" || position === "menu"
-                ? "#F2E7D4"
-                : "transparent",
-            color:
-              position === "arabic" || position === "menu"
-                ? "black"
-                : "#F2E7D4",
+            ...defaultButtonStyle,
+            backgroundColor: isFirstButtonActive ? "#F2E7D4" : "transparent",
+            color: isFirstButtonActive ? "black" : "#F2E7D4",
             borderTopLeftRadius: borderRadius,
             borderBottomLeftRadius: borderRadius,
-            outline: "none",
-            borderColor: "#F2E7D4",
-            boxShadow: "none",
             padding: padding,
             width: widthOne,
-            textAlign: "center",
           }}
         >
           {buttonTextOne === "arabic" ? "عربي" : buttonTextOne}
         </Radio.Button>
+
+        {/* Second radio button */}
         <Radio.Button
-          value={buttonTextTwo.toLowerCase()}
+          value={buttonTextTwo.toLowerCase()} // Set the value for the second button
           style={{
-            backgroundColor:
-              position === "eng" || position === "combo"
-                ? "#F2E7D4"
-                : "transparent",
-            color:
-              position === "eng" || position === "combo" ? "black" : "#F2E7D4 ",
+            ...defaultButtonStyle,
+            backgroundColor: isSecondButtonActive ? "#F2E7D4" : "transparent",
+            color: isSecondButtonActive ? "black" : "#F2E7D4",
             borderTopRightRadius: borderRadius,
             borderBottomRightRadius: borderRadius,
-            outline: "none",
-            borderColor: "#F2E7D4",
-            boxShadow: "none",
             padding: padding,
             width: widthTwo,
-            textAlign: "center",
           }}
         >
+          {/* Display the button text */}
           {buttonTextTwo}
         </Radio.Button>
       </Radio.Group>
