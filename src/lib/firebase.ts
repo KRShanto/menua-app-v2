@@ -45,10 +45,13 @@ export const FEEDBACK_COLLECTION = "production__feedback";
 export interface MenuItem {
   id: string;
   name: string;
+  name_arab: string;
   category: string;
+  category_arab: string;
   calories: string;
   price: number;
   description: string;
+  description_arab: string;
   discountedPrice: number;
   discountPercentage: number;
   likes: string;
@@ -57,6 +60,7 @@ export interface MenuItem {
 
 export interface MenuCategory {
   title: string;
+  title_arab: string;
   items: MenuItem[];
   imageURL: string;
 }
@@ -116,6 +120,7 @@ export const fetchMenuData = async (): Promise<MenuCategory[]> => {
     if (!menuCategories[item.category]) {
       menuCategories[item.category] = {
         title: item.category,
+        title_arab: item.category_arab,
         items: [],
         imageURL: item.imageURL, // Use the first item's image as the category image
       };

@@ -11,6 +11,7 @@ import {
   MenuItem,
 } from "@/lib/firebase";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { useLang } from "@/lib/useLang";
 // import { getDownloadURL, ref } from "firebase/storage";
 
 export default function DiscountSection() {
@@ -18,6 +19,7 @@ export default function DiscountSection() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { cart, increaseQuantity, decreaseQuantity } = useAddToCartStore();
   const [discountData, setDiscountData] = useState<MenuItem[]>([]);
+  const lang = useLang();
 
   useEffect(() => {
     const fetchDiscounts = async () => {
@@ -78,7 +80,7 @@ export default function DiscountSection() {
         {/* Discount Title */}
         <h2 className="flex items-center gap-2 text-xl text-foregroundColor">
           <FaFire />
-          This Week's Special
+          {lang("This Week's Special", "العروض الخاصة هذا الأسبوع")}
         </h2>
 
         {/* Item List */}
@@ -99,7 +101,9 @@ export default function DiscountSection() {
                   className="h-[200px] rounded-t-xl object-cover"
                 />
                 <div className="h-[7rem] rounded-bl-xl rounded-br-xl bg-[#1F1F20] p-4">
-                  <h3 className="text-lg text-foregroundColor">{item.name}</h3>
+                  <h3 className="text-lg text-foregroundColor">
+                    {lang(item.name, item.name_arab)}
+                  </h3>
                   <p className="-mb-16 mt-5 text-foregroundColor">
                     SR{" "}
                     {(item.price * (1 - item.discountPercentage / 100)).toFixed(

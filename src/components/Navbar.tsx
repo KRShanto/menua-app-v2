@@ -24,62 +24,14 @@ import { FaLocationDot } from "react-icons/fa6";
 import { RiFeedbackFill } from "react-icons/ri";
 import FormDrawer from "./FormDrawer";
 import { useNavigate } from "react-router-dom";
-
-const menuItems = [
-  { icon: FaHome, label: "Home Page", path: "/" },
-  { icon: FaShoppingCart, label: "Menu Cart", path: "/cart" },
-  { icon: RiFeedbackFill, label: "Feedback", onClick: () => {} },
-];
-
-const collapsibleItemsData = [
-  {
-    id: "opening-hours",
-    icon: FaClock,
-    label: "Opening Hours",
-    content: (
-      <>
-        <div className="flex items-start gap-2">
-          <FaClock className="mt-1 text-lg" />
-          <div className="flex-col">
-            <div>Sunday - Wednesday</div>
-            <div className="font-bold">1:00 PM - 1:00 AM</div>
-          </div>
-        </div>
-        <br />
-        <div className="flex items-start gap-2">
-          <FaClock className="mt-1 text-lg" />
-          <div className="flex-col">
-            <div>Thursday - Saturday</div>
-            <div className="font-bold">1:00 PM - 2:00 AM</div>
-          </div>
-        </div>
-      </>
-    ),
-  },
-  {
-    id: "contact-us",
-    icon: FaPhoneAlt,
-    label: "Contact Us",
-    content: <p>+966 55094 2073</p>,
-  },
-  {
-    id: "location",
-    icon: FaLocationDot,
-    label: "Location",
-    content: (
-      <div className="space-y-2 pl-4">
-        <p>123 Restaurant Street</p>
-        <p>City, Country</p>
-      </div>
-    ),
-  },
-];
+import { useLang } from "@/lib/useLang";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [collapsibleItems, setCollapsibleItems] = useState<string | null>(null);
   const [isFormDrawerOpen, setIsFormDrawerOpen] = useState(false);
   const navigate = useNavigate();
+  const lang = useLang();
   const handleOpenFormDrawer = () => {
     setIsFormDrawerOpen(true);
     setIsOpen(false);
@@ -92,6 +44,73 @@ export default function Navbar() {
     navigate(path);
     setIsOpen(false);
   };
+
+  const menuItems = [
+    { icon: FaHome, label: lang("Home Page", "الصفحة الرئيسية"), path: "/" },
+    {
+      icon: FaShoppingCart,
+      label: lang("Menu Cart", "عربة القائمة"),
+      path: "/cart",
+    },
+    {
+      icon: RiFeedbackFill,
+      label: lang("Feedback", "ردود الفعل"),
+      onClick: () => {},
+    },
+  ];
+
+  const collapsibleItemsData = [
+    {
+      id: "opening-hours",
+      icon: FaClock,
+      label: lang("Opening Hours", "ساعات العمل"),
+      content: (
+        <>
+          <div className="flex items-start gap-2">
+            <FaClock className="mt-1 text-lg" />
+            <div className="flex-col">
+              {/* <div>Sunday - Wednesday</div> */}
+              <div>{lang("Sunday - Wednesday", "الأحد - الأربعاء")}</div>
+              {/* <div className="font-bold">1:00 PM - 1:00 AM</div> */}
+              <div className="font-bold">
+                {lang("1:00 PM - 1:00 AM", "1:00 مساءً - 1:00 صباحًا")}
+              </div>
+            </div>
+          </div>
+          <br />
+          <div className="flex items-start gap-2">
+            <FaClock className="mt-1 text-lg" />
+            <div className="flex-col">
+              {/* <div>Thursday - Saturday</div> */}
+              <div>{lang("Thursday - Saturday", "الخميس - السبت")}</div>
+              {/* <div className="font-bold">1:00 PM - 2:00 AM</div> */}
+              <div className="font-bold">
+                {lang("1:00 PM - 2:00 AM", "1:00 مساءً - 2:00 صباحًا")}
+              </div>
+            </div>
+          </div>
+        </>
+      ),
+    },
+    {
+      id: "contact-us",
+      icon: FaPhoneAlt,
+      label: lang("Contact Us", "اتصل بنا"),
+      content: <p>+966 55094 2073</p>,
+    },
+    {
+      id: "location",
+      icon: FaLocationDot,
+      label: lang("Location", "الموقع"),
+      content: (
+        <div className="space-y-2 pl-4">
+          <p>123 Restaurant Street</p>
+          <p>City, Country</p>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <>
       <button onClick={() => setIsOpen(true)}>
