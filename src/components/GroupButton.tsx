@@ -4,6 +4,7 @@ import { LangType, ViewType } from "../types/menu";
 import { SizeType } from "antd/es/config-provider/SizeContext";
 import { CSSProperties } from "react";
 import { useLanguageStore } from "@/stores/language";
+import { useLang } from "@/lib/useLang";
 
 // Define the props for the GroupButton component
 interface GroupButtonProps {
@@ -45,6 +46,10 @@ export default function GroupButton({
     defaultPosition,
   );
   const { setLanguage } = useLanguageStore();
+  const lang = useLang();
+
+  console.log("Text one: ", buttonTextOne);
+  console.log("Text two: ", buttonTextTwo);
 
   // Determine if the first button is active based on the current position
   const isFirstButtonActive =
@@ -95,7 +100,11 @@ export default function GroupButton({
             width: widthOne,
           }}
         >
-          {buttonTextOne === "arabic" ? "عربي" : buttonTextOne}
+          {buttonTextOne === "arabic"
+            ? "عربي"
+            : buttonTextOne === "Menu"
+              ? lang("Menu", "مينو")
+              : buttonTextOne}
         </Radio.Button>
 
         {/* Second radio button */}
@@ -112,7 +121,9 @@ export default function GroupButton({
           }}
         >
           {/* Display the button text */}
-          {buttonTextTwo}
+          {buttonTextTwo === "Combo"
+            ? lang("Combo", "وجبات عائلية")
+            : buttonTextTwo}
         </Radio.Button>
       </Radio.Group>
     </Space>
