@@ -40,14 +40,16 @@ export default function MenuCard({
         <div className="flex flex-col rounded-b-xl py-4 text-primaryText">
           <div className="flex flex-col gap-2 px-2">
             <p className="text-lg">{lang(title, title_arab)}</p>
-            <p className="text-sm">{itemCount} Items</p>
+            <p className="text-sm">
+              {itemCount} {lang("items", "عناصر")}
+            </p>
             <div className="flex items-center justify-between gap-2">
               <div className="relative flex items-center justify-center gap-1">
-                <FaHeart size={16} color="#F37554" className="relative pt-1" />{" "}
+                <FaHeart size={16} color="#F37554" className="relative pt-1" />
                 <span className="text-center text-sm">{likes}</span>
               </div>
               <div className="flex items-center justify-end gap-2 px-4">
-                <span>See Details</span>
+                <span>{lang("See Details", "عرض التفاصيل")}</span>
                 <MdOutlineArrowOutward size={16} />
               </div>
             </div>

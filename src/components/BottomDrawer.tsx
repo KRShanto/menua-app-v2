@@ -6,6 +6,7 @@ import { GoPlus } from "react-icons/go";
 import { LuMinus } from "react-icons/lu";
 import { useAddToCartStore } from "@/stores/useAddToCart";
 import { useNavigate } from "react-router-dom";
+import { useLang } from "@/lib/useLang";
 
 interface BottomDrawerProps {
   item?: MenuItem | null;
@@ -17,6 +18,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
   const [itemQuantity, setItemQuantity] = useState(0);
   const [cartActivated, setCartActivated] = useState(false);
   const [showGoToCartButton, setShowGoToCartButton] = useState(false);
+  const lang = useLang();
 
   const {
     cart,
@@ -55,6 +57,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
       addToCart({
         id: item.id,
         name: item.name,
+        name_arab: item.name_arab,
         price: item.price,
         image: item.imageURL,
         quantity: itemQuantity,
@@ -85,7 +88,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
           icon={<RxCross2 color="black" />}
           className="absolute -top-12 right-4 text-[#F2E7D4]"
         >
-          Close
+          {lang("Close", "إغلاق")}
         </FloatButton>
         <div className="-mt-2 mb-4 w-full">
           {item ? (
@@ -102,12 +105,18 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
               <div className="mt-2 flex flex-col text-black">
                 <div className="flex flex-col gap-2 px-2 font-cairo">
                   <div className="flex items-center justify-between">
-                    <p className="font-cairo text-xl font-bold">{item.name}</p>
+                    <p className="font-cairo text-xl font-bold">
+                      {lang(item.name, item.name_arab)}
+                    </p>
                   </div>
                   <div className="flex w-[100px] items-center justify-center rounded-xl bg-[#F2C5AE] py-1 text-sm text-[#F37554]">
-                    <span>{item.calories} calories</span>
+                    <p>
+                      {item.calories} {lang("Calories", "سعرات حرارية")}
+                    </p>
                   </div>
-                  <p className="text-sm">{item.description}</p>
+                  <p className="text-sm">
+                    {lang(item.description, item.description_arab)}
+                  </p>
                   <div className="mb-1 flex items-center justify-between gap-2">
                     <div className="relative flex items-center justify-center gap-1">
                       {item.discountPercentage ? (
@@ -145,7 +154,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
                           className="flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black"
                           onClick={handleIncrement}
                         >
-                          Add <GoPlus size={16} />
+                          {lang("Add", "إضافة")} <GoPlus size={16} />
                         </button>
                       ) : (
                         <div className="flex items-center rounded-full bg-[#D87E27] px-4 py-1 text-black">
@@ -169,12 +178,12 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
                   } w-full max-w-[350px] py-2 text-sm text-[#F2E7D4]`}
                   onClick={handleAddToCart}
                 >
-                  <span>Add to Cart</span>
+                  <span>{lang("Add to Cart", "إضافة إلى السلة")}</span>
                 </button>
               </div>
             </div>
           ) : (
-            <p>No item selected</p>
+            <p>{lang("No item selected", "لم يتم تحديد عنصر")}</p>
           )}
         </div>
       </Drawer>
@@ -188,7 +197,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
               });
             }}
           >
-            <span>Go to Cart</span>
+            <span>{lang("Go to Cart", "الذهاب إلى السلة")}</span>
           </button>
         </div>
       )}

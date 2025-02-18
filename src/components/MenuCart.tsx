@@ -1,3 +1,4 @@
+import { useLang } from "@/lib/useLang";
 import { useAddToCartStore } from "@/stores/useAddToCart";
 import { BsCart } from "react-icons/bs";
 import { FaMinus, FaPlus } from "react-icons/fa";
@@ -8,6 +9,7 @@ export default function MenuCart() {
   const navigate = useNavigate();
   const location = useLocation();
   const categoryId = location.state?.categoryId;
+  const lang = useLang();
 
   const handleGoToMenu = () => {
     if (categoryId) {
@@ -20,7 +22,7 @@ export default function MenuCart() {
   return (
     <section className="text-foregroundColor">
       <h2 className="ml-5 flex items-center gap-2 text-lg">
-        <BsCart /> Menu Cart
+        <BsCart /> {lang("Menu Cart", "سلة الطلبات")}
       </h2>
 
       <ul>
@@ -34,7 +36,7 @@ export default function MenuCart() {
               />
               <div className="flex w-full items-center justify-between">
                 <div>
-                  <h3>{item.name}</h3>
+                  <h3>{lang(item.name, item.name_arab)}</h3>
                   <p>SR {item.price}</p>
                 </div>
 
@@ -63,13 +65,13 @@ export default function MenuCart() {
             className="rounded-lg bg-black px-10 py-3 text-sm text-[#F2E7D4]"
             onClick={handleGoToMenu}
           >
-            Go to Menu
+            {lang("Go to Menu", "الذهاب إلى القائمة")}
           </button>
           <button
             className="rounded-lg bg-[#D87E27] px-10 py-3 text-sm text-[#F2E7D4]"
             onClick={() => navigate("/orderhistory")}
           >
-            Confirm Order
+            {lang("Confirm Order", "تأكيد الطلب")}
           </button>
         </div>
       </div>

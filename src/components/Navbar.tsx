@@ -69,9 +69,7 @@ export default function Navbar() {
           <div className="flex items-start gap-2">
             <FaClock className="mt-1 text-lg" />
             <div className="flex-col">
-              {/* <div>Sunday - Wednesday</div> */}
               <div>{lang("Sunday - Wednesday", "الأحد - الأربعاء")}</div>
-              {/* <div className="font-bold">1:00 PM - 1:00 AM</div> */}
               <div className="font-bold">
                 {lang("1:00 PM - 1:00 AM", "1:00 مساءً - 1:00 صباحًا")}
               </div>
@@ -81,9 +79,7 @@ export default function Navbar() {
           <div className="flex items-start gap-2">
             <FaClock className="mt-1 text-lg" />
             <div className="flex-col">
-              {/* <div>Thursday - Saturday</div> */}
               <div>{lang("Thursday - Saturday", "الخميس - السبت")}</div>
-              {/* <div className="font-bold">1:00 PM - 2:00 AM</div> */}
               <div className="font-bold">
                 {lang("1:00 PM - 2:00 AM", "1:00 مساءً - 2:00 صباحًا")}
               </div>
@@ -148,7 +144,9 @@ export default function Navbar() {
                 key={item.label}
                 className="flex cursor-pointer items-center gap-3 px-5 text-zinc-900"
                 onClick={
-                  item.label === "Feedback" ? handleOpenFormDrawer : undefined
+                  item.label === "Feedback" || item.label === "ردود الفعل"
+                    ? handleOpenFormDrawer
+                    : undefined
                 }
               >
                 <span className="flex items-center gap-2 text-xl">

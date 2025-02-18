@@ -3,6 +3,7 @@ import { Drawer, FloatButton } from "antd";
 import { RxCross2 } from "react-icons/rx";
 import { addDoc, collection } from "firebase/firestore";
 import { db, FEEDBACK_COLLECTION } from "@/lib/firebase";
+import { useLang } from "@/lib/useLang";
 
 interface BottomDrawerProps {
   open: boolean;
@@ -12,6 +13,7 @@ interface BottomDrawerProps {
 const FormDrawer: React.FC<BottomDrawerProps> = ({ open, onClose }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [feedback, setFeedback] = useState("");
+  const lang = useLang();
 
   const handleSubmitForm = async () => {
     if (!phoneNumber || !feedback) {
@@ -52,7 +54,7 @@ const FormDrawer: React.FC<BottomDrawerProps> = ({ open, onClose }) => {
         icon={<RxCross2 color="black" />}
         className="absolute -top-12 right-4 text-[#F2E7D4]"
       >
-        Close
+        {lang("Close", "إغلاق")}
       </FloatButton>
       <div className="-mt-2 mb-4 w-full">
         <div className="flex h-fit flex-col rounded-sm p-4">
@@ -61,12 +63,12 @@ const FormDrawer: React.FC<BottomDrawerProps> = ({ open, onClose }) => {
               htmlFor="phoneNumber"
               className="absolute -top-3 left-2 z-20 text-nowrap bg-primaryText px-2 text-sm text-foreground/70"
             >
-              Phone Number
+              {lang("Phone Number", "رقم الهاتف")}
             </label>
             <input
               id="phoneNumber"
               type="tel"
-              placeholder="Enter your phone number"
+              placeholder={lang("Enter your phone number", "أدخل رقم هاتفك")}
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
               className="w-full rounded-md border border-foreground/70 bg-transparent p-2 px-3 placeholder-foreground/70 outline-none"
@@ -77,11 +79,14 @@ const FormDrawer: React.FC<BottomDrawerProps> = ({ open, onClose }) => {
               htmlFor="feedback"
               className="absolute -top-3 left-2 z-20 text-nowrap bg-primaryText px-2 text-sm text-foreground/70"
             >
-              Feedback
+              {lang("Feedback", "ردود الفعل")}
             </label>
             <textarea
               id="feedback"
-              placeholder="Enter your feedback"
+              placeholder={lang(
+                "Enter your feedback",
+                "أدخل ردود الفعل الخاصة بك",
+              )}
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
               rows={4}
@@ -92,7 +97,7 @@ const FormDrawer: React.FC<BottomDrawerProps> = ({ open, onClose }) => {
             className="mt-20 h-10 w-full rounded-lg border-none bg-[#D87E27] text-[#F2E7D4]"
             onClick={handleSubmitForm}
           >
-            Submit
+            {lang("Submit", "إرسال")}
           </button>
         </div>
       </div>

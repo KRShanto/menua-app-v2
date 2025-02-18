@@ -7,6 +7,7 @@ import { fetchMenuData, MenuItem, MenuCategory } from "@/lib/firebase"; // Impor
 import { useAddToCartStore } from "@/stores/useAddToCart";
 import { GoPlus } from "react-icons/go";
 import { LuMinus } from "react-icons/lu";
+import { useLang } from "@/lib/useLang";
 
 export default function CategoryPage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -19,6 +20,7 @@ export default function CategoryPage() {
     selectedItem,
     setSelectedItem,
   } = useAddToCartStore();
+  const lang = useLang();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,7 +51,7 @@ export default function CategoryPage() {
       <div className="relative">
         <div className="absolute inset-0 bg-black/80" />
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-2xl text-white">
-          {category?.title}
+          {lang(category?.title, category?.title_arab)}
         </div>
         <img
           src={category?.imageURL}
@@ -77,15 +79,18 @@ export default function CategoryPage() {
                 {item.discountPercentage && (
                   <div className="absolute left-0 top-0 rounded-full bg-foregroundColor px-1.5 py-0.5 text-xs text-white">
                     <div className="z-10 inline-flex items-center gap-1 text-black">
-                      <MdDiscount /> {item.discountPercentage}% OFF
+                      <MdDiscount /> {item.discountPercentage}%{" "}
+                      {lang("OFF", "خصم")}
                     </div>
                   </div>
                 )}
               </div>
               <div className="min-w-0 flex-1">
-                <h3 className="font-medium text-white">{item.name}</h3>
+                <h3 className="font-medium text-white">
+                  {lang(item.name, item.name_arab)}
+                </h3>
                 <div className="inline-flex rounded-full bg-[#2E211D] px-1.5 py-0.5 text-sm text-[#F37554]">
-                  {item.calories} Calories
+                  {item.calories} {lang("Calories", "سعرات حرارية")}
                 </div>
                 <div className="mt-2 text-sm text-primaryText">
                   SR {item.discountedPrice || item.price}{" "}
@@ -98,14 +103,11 @@ export default function CategoryPage() {
                 <div>
                   {!itemCart ? (
                     <button className="flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black">
-                      Add <GoPlus size={16} />
+                      {lang("Add", "إضافة")} <GoPlus size={16} />
                     </button>
                   ) : (
                     <div className="flex items-center rounded-full bg-[#D87E27] px-4 py-1 text-black">
-                      <button
-                        className=""
-                        onClick={() => decreaseQuantity(item.id)}
-                      >
+                      <button onClick={() => decreaseQuantity(item.id)}>
                         <LuMinus size={14} />
                       </button>
                       {/* need to show the quantity of the seletected item */}
