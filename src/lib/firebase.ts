@@ -42,6 +42,11 @@ export const MANAGER_DEFAULT_IMAGE = "/user-image.png";
 //   : "development__feedback";
 export const FEEDBACK_COLLECTION = "production__feedback";
 
+// export const INDEX_COLLECTION = import.meta.env.PROD
+//   ? "production__index"
+//   : "development__index";
+export const INDEX_COLLECTION = "production__index";
+
 export interface MenuItem {
   id: string;
   name: string;
@@ -103,10 +108,6 @@ export const fetchMenuData = async (): Promise<MenuCategory[]> => {
       item.discountPercentage = discount.rate;
       item.discountedPrice = item.price - (item.price * discount.rate) / 100;
     }
-
-    // Fetch the download URL for the image
-    // const imageRef = ref(storage, item.imageURL);
-    // item.imageURL = await getDownloadURL(imageRef);
   }
 
   const menuCategories: { [key: string]: MenuCategory } = {};
@@ -123,7 +124,27 @@ export const fetchMenuData = async (): Promise<MenuCategory[]> => {
     menuCategories[item.category].items.push(item);
   });
 
+  // Get the indexe collect // Get the indexe collection data. this collection has only one document.
+  const indexCollection = collection(db, INDEX_COLLECTION);
+  const indexSnapshot = await getDocs(indexCollection);
+  const indexData = indexSnapshot.docs[0].data();
+
+  // Convert the index data into a lookup object
+  // the format of the index is: [{"category_name": index_number}]
+  const categoryIndexMap: { [key: string]: number } = {};
+  Object.entries(indexData).forEach(([catName, indexNumber]) => {
+    categoryIndexMap[catName] = indexNumber as number;
+  });
+
+  // Turn the menuCategories object into an array
   const categories = Object.values(menuCategories);
+
+  // Sort the categories based on the index lookup
+  categories.sort((a, b) => {
+    const indexA = categoryIndexMap[a.title] ?? Infinity;
+    const indexB = categoryIndexMap[b.title] ?? Infinity;
+    return indexA - indexB;
+  });
 
   return categories;
 };
