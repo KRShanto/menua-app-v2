@@ -23,39 +23,60 @@ export default function DiscountSection() {
 
   useEffect(() => {
     const fetchDiscounts = async () => {
-      const discountSnapshot = await getDocs(
-        collection(db, DISCOUNT_COLLECTION),
-      );
-      const discounts = discountSnapshot.docs.map((doc) => doc.data());
+      try {
+        const discountSnapshot = await getDocs(
+          collection(db, DISCOUNT_COLLECTION),
+        );
+        const discounts = discountSnapshot.docs.map((doc) => doc.data());
 
-      console.log("Discounts: ", discounts);
+        console.log("Discounts from discount section component: ", discounts);
+        console.log("length of discounts: ", discounts.length);
 
-      // Fetch all related menu items with discounts
-      const items = await Promise.all(
-        discounts.map(async (discount) => {
-          const itemSnapshot = await getDoc(
-            doc(db, MENU_COLLECTION, discount.itemId),
-          );
-          const menuItems = itemSnapshot?.data() as MenuItem;
-          menuItems.id = itemSnapshot.id;
+        // Fetch all related menu items with discounts
+        const items = await Promise.all(
+          discounts.map(async (discount, index) => {
+            try {
+              console.log(`Processing discount ${index}: `, discount);
 
-          console.log("Menu items: ", menuItems);
+              const itemSnapshot = await getDoc(
+                doc(db, MENU_COLLECTION, discount.itemId),
+              );
+              console.log(
+                `Item snapshot for discount ${index}: `,
+                itemSnapshot,
+              );
 
-          // download image
-          // const storageRef = ref(storage, menuItems.imageURL);
-          // const imageUrl = await getDownloadURL(storageRef);
+              if (!itemSnapshot.exists()) {
+                console.error(
+                  `Item not found for discount ${index}: `,
+                  discount.itemId,
+                );
+                return null;
+              }
 
-          // menuItems.imageURL = imageUrl;
+              const menuItems = itemSnapshot.data() as MenuItem;
+              console.log(`Menu items for discount ${index}: `, menuItems);
+              menuItems.id = itemSnapshot.id;
 
-          // add discount rate
-          menuItems.discountPercentage = discount.rate;
+              // Add discount rate
+              menuItems.discountPercentage = discount.rate;
 
-          return menuItems;
-        }),
-      );
+              return menuItems;
+            } catch (error) {
+              console.error(`Error processing discount ${index}: `, error);
+              return null;
+            }
+          }),
+        );
 
-      // Flatten the items array
-      setDiscountData(items);
+        // Filter out any null values
+        const validItems = items.filter((item) => item !== null);
+
+        // Set the discount data
+        setDiscountData(validItems);
+      } catch (error) {
+        console.error("Error fetching discounts: ", error);
+      }
     };
 
     fetchDiscounts();
