@@ -10,7 +10,8 @@ interface LanguageState {
 export const useLanguageStore = create<LanguageState>()(
   persist(
     (set, get) => ({
-      language: (localStorage.getItem("language") as "eng" | "arabic") || "eng", // Default to English
+      language:
+        (localStorage.getItem("language") as "eng" | "arabic") || "arabic", // Default to arabic
       setLanguage: (language) => {
         localStorage.setItem("language", language);
         set({ language });
