@@ -28,8 +28,6 @@ const FormDrawer: React.FC<BottomDrawerProps> = ({ open, onClose }) => {
         createdAt: new Date(),
       });
 
-      console.log("Form submitted:", { phoneNumber, feedback });
-
       setPhoneNumber("");
       setFeedback("");
 

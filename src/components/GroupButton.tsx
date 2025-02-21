@@ -48,9 +48,6 @@ export default function GroupButton({
   const { setLanguage } = useLanguageStore();
   const lang = useLang();
 
-  console.log("Text one: ", buttonTextOne);
-  console.log("Text two: ", buttonTextTwo);
-
   // Determine if the first button is active based on the current position
   const isFirstButtonActive =
     position === "arabic" ||

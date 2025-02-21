@@ -88,8 +88,6 @@ export const fetchMenuData = async (): Promise<MenuCategory[]> => {
     ...doc.data(),
   }));
 
-  console.log("Discounts: ", discounts);
-
   const discountMap = discounts.reduce(
     (acc, discount) => {
       acc[discount.itemId] = discount;
@@ -98,12 +96,9 @@ export const fetchMenuData = async (): Promise<MenuCategory[]> => {
     {} as { [key: string]: Discount },
   );
 
-  console.log("Discount Map: ", discountMap);
-
   for (const item of menuItems) {
     const discount = discountMap[item.id];
 
-    console.log("Item discount: ", discount);
     if (discount) {
       item.discountPercentage = discount.rate;
       item.discountedPrice = item.price - (item.price * discount.rate) / 100;

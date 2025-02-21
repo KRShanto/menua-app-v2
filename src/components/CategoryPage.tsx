@@ -25,12 +25,10 @@ export default function CategoryPage() {
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetchMenuData();
-      console.log("Fetched Data: ", data);
       const selectedCategory = data.find(
         (category) =>
           category.title.toLowerCase() === categoryId?.toLowerCase(),
       );
-      console.log("Selected Category: ", selectedCategory);
       setCategory(selectedCategory || null);
     };
 
