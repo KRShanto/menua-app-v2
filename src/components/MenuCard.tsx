@@ -30,14 +30,14 @@ export default function MenuCard({
       >
         <div>
           <img
-            src={imageURL}
+            src={imageURL || "/placeholder.svg"}
             alt={title}
             width="400"
             height="400"
             className="h-[200px] rounded-xl object-cover"
           />
         </div>
-        <div className="flex flex-col rounded-b-xl py-4 text-primaryText">
+        <div className="flex flex-col rounded-b-xl bg-[#2a2a2c] py-4 text-primaryText">
           <div className="flex flex-col gap-2 px-2">
             <p className="text-lg">{lang(title, title_arab)}</p>
             <p className="text-sm">

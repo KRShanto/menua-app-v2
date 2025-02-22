@@ -9,7 +9,6 @@ const DiscountItemSkeleton: React.FC = () => {
         <div className="mt-5 h-4 w-1/2 rounded bg-[#3f3f42]" />
       </div>
       <div className="absolute left-4 top-4 h-6 w-16 rounded-full bg-[#3f3f42]" />
-      <div className="absolute right-3 top-[60%] h-8 w-20 rounded-full bg-[#3f3f42]" />
     </li>
   );
 };
