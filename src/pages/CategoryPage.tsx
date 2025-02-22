@@ -14,13 +14,7 @@ export default function CategoryPage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [category, setCategory] = useState<MenuCategory | null>(null);
   const { categoryId } = useParams<{ categoryId: string }>();
-  const {
-    cart,
-    increaseQuantity,
-    decreaseQuantity,
-    selectedItem,
-    setSelectedItem,
-  } = useAddToCartStore();
+  const { cart, selectedItem, setSelectedItem } = useAddToCartStore();
   const lang = useLang();
   const { menuCategories } = useDataStore();
 
@@ -60,7 +54,7 @@ export default function CategoryPage() {
             <div
               key={item.id}
               className="group relative flex items-center gap-3 overflow-hidden rounded-lg bg-[#2B2A2C] p-2"
-              onClick={() => handleItemClick(item)}
+              // onClick={() => handleItemClick(item)}
             >
               <div className="relative h-16 w-20 flex-shrink-0">
                 <img
@@ -96,20 +90,21 @@ export default function CategoryPage() {
               <div className="flex flex-col gap-6">
                 <div>
                   {!itemCart ? (
-                    <button className="flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black">
+                    <button
+                      className="flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black"
+                      onClick={() => handleItemClick(item)}
+                    >
                       {lang("Add", "إضافة")} <GoPlus size={16} />
                     </button>
                   ) : (
-                    <div className="flex items-center rounded-full bg-[#D87E27] px-4 py-1 text-black">
-                      <button onClick={() => decreaseQuantity(item.id)}>
-                        <LuMinus size={14} />
-                      </button>
-                      {/* need to show the quantity of the seletected item */}
+                    <button
+                      className="flex items-center rounded-full bg-[#D87E27] px-4 py-1 text-black"
+                      onClick={() => handleItemClick(item)}
+                    >
+                      <LuMinus size={14} />
                       <span className="mx-2">{itemCart.quantity}</span>
-                      <button onClick={() => increaseQuantity(item.id)}>
-                        <GoPlus size={16} />
-                      </button>
-                    </div>
+                      <GoPlus size={16} />
+                    </button>
                   )}
                 </div>
               </div>
