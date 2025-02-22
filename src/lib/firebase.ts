@@ -83,6 +83,7 @@ export interface Discount {
 export interface FetchDataResult {
   categories: MenuCategory[]; // Full categories with items (including discount info)
   discountedItems: MenuItem[]; // Just the discounted items
+  menuItems: MenuItem[]; // All menu items (including discount info)
 }
 
 /**
@@ -177,6 +178,7 @@ export const fetchData = async (): Promise<FetchDataResult> => {
     return {
       categories,
       discountedItems,
+      menuItems,
     };
   } catch (error) {
     console.error("Error fetching data:", error);
