@@ -3,11 +3,12 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { MdDiscount } from "react-icons/md";
 import BottomDrawer from "./BottomDrawer";
-import { fetchMenuData, MenuItem, MenuCategory } from "@/lib/firebase"; // Import the fetchMenuData function
+import { MenuItem, MenuCategory } from "@/lib/firebase"; // Import the fetchMenuData function
 import { useAddToCartStore } from "@/stores/useAddToCart";
 import { GoPlus } from "react-icons/go";
 import { LuMinus } from "react-icons/lu";
 import { useLang } from "@/lib/useLang";
+import { useDataStore } from "@/stores/data";
 
 export default function CategoryPage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -21,19 +22,14 @@ export default function CategoryPage() {
     setSelectedItem,
   } = useAddToCartStore();
   const lang = useLang();
+  const { menuCategories } = useDataStore();
 
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetchMenuData();
-      const selectedCategory = data.find(
-        (category) =>
-          category.title.toLowerCase() === categoryId?.toLowerCase(),
-      );
-      setCategory(selectedCategory || null);
-    };
-
-    fetchData();
-  }, [categoryId]);
+    const selectedCategory = menuCategories.find(
+      (category) => category.title.toLowerCase() === categoryId?.toLowerCase(),
+    );
+    setCategory(selectedCategory || null);
+  }, [categoryId, menuCategories]);
 
   const handleItemClick = (item: MenuItem) => {
     setSelectedItem(item);

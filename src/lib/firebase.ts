@@ -1,6 +1,5 @@
 import { initializeApp } from "firebase/app";
 import { collection, getDocs, getFirestore } from "firebase/firestore";
-// import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 
@@ -75,76 +74,112 @@ export interface Discount {
   discountPercentage: number;
 }
 
-export const fetchMenuData = async (): Promise<MenuCategory[]> => {
-  const menuCollection = collection(db, MENU_COLLECTION);
-  const discountCollection = collection(db, DISCOUNT_COLLECTION);
+export interface Discount {
+  itemId: string;
+  rate: number; // You called it "discount.rate" in your old code
+}
 
-  const [menuSnapshot, discountSnapshot] = await Promise.all([
-    getDocs(menuCollection),
-    getDocs(discountCollection),
-  ]);
+/** Structure for the combined fetch function’s return value */
+export interface FetchDataResult {
+  categories: MenuCategory[]; // Full categories with items (including discount info)
+  discountedItems: MenuItem[]; // Just the discounted items
+}
 
-  const menuItems: MenuItem[] = menuSnapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  })) as MenuItem[];
+/**
+ * Fetches all menu items, merges in discount data, sorts categories by your index document,
+ * and returns both the sorted categories and the discounted items in one shot.
+ */
+export const fetchData = async (): Promise<FetchDataResult> => {
+  try {
+    console.log("Fetching data...");
 
-  const discounts = discountSnapshot.docs.map((doc) => ({
-    ...doc.data(),
-  }));
+    // 1) Fetch menu documents and discount documents in parallel
+    const [menuSnapshot, discountSnapshot] = await Promise.all([
+      getDocs(collection(db, MENU_COLLECTION)),
+      getDocs(collection(db, DISCOUNT_COLLECTION)),
+    ]);
 
-  const discountMap = discounts.reduce(
-    (acc, discount) => {
-      acc[discount.itemId] = discount;
-      return acc;
-    },
-    {} as { [key: string]: Discount },
-  );
+    // 2) Convert menu docs into an array of MenuItem
+    const menuItems: MenuItem[] = menuSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as MenuItem[];
 
-  for (const item of menuItems) {
-    const discount = discountMap[item.id];
+    // 3) Convert discount docs into an array of Discount
+    const discounts: Discount[] = discountSnapshot.docs.map((doc) => ({
+      ...doc.data(),
+    })) as Discount[];
 
-    if (discount) {
-      item.discountPercentage = discount.rate;
-      item.discountedPrice = item.price - (item.price * discount.rate) / 100;
+    // 4) Build a map (key: itemId) => { rate }
+    const discountMap: Record<string, Discount> = {};
+    for (const d of discounts) {
+      discountMap[d.itemId] = d;
     }
+
+    // 5) Merge discount info into the menu items
+    for (const item of menuItems) {
+      const discountObj = discountMap[item.id];
+      if (discountObj) {
+        item.discountPercentage = discountObj.rate;
+        item.discountedPrice =
+          item.price - (item.price * discountObj.rate) / 100;
+      } else {
+        // Make sure these fields are set even if no discount
+        item.discountPercentage = 0;
+        item.discountedPrice = item.price;
+      }
+    }
+
+    // 6) Create a dictionary of categories => { title, title_arab, items[], imageURL }
+    const menuCategories: Record<string, MenuCategory> = {};
+    for (const item of menuItems) {
+      if (!menuCategories[item.category]) {
+        menuCategories[item.category] = {
+          title: item.category,
+          title_arab: item.category_arab,
+          items: [],
+          // Just using the first item’s image as the category image
+          imageURL: item.imageURL,
+        };
+      }
+      menuCategories[item.category].items.push(item);
+    }
+
+    // 7) Fetch the category index doc to sort categories
+    //    (assuming you have only one doc in the INDEX_COLLECTION)
+    const indexSnapshot = await getDocs(collection(db, INDEX_COLLECTION));
+    const indexData = indexSnapshot.docs[0]?.data() || {};
+
+    // Convert the index data into a lookup object
+    // e.g. { "Burgers": 1, "Pizzas": 2, "Desserts": 3, ... }
+    const categoryIndexMap: Record<string, number> = {};
+    for (const [catName, idx] of Object.entries(indexData)) {
+      categoryIndexMap[catName] = idx as number;
+    }
+
+    // 8) Turn the menuCategories dictionary into an array
+    const categories = Object.values(menuCategories);
+
+    // 9) Sort the array by your index map, pushing unknown categories to the end
+    categories.sort((a, b) => {
+      const idxA = categoryIndexMap[a.title] ?? Infinity;
+      const idxB = categoryIndexMap[b.title] ?? Infinity;
+      return idxA - idxB;
+    });
+
+    // 10) Build a separate array of discounted items only
+    const discountedItems = menuItems.filter(
+      (item) => item.discountPercentage > 0,
+    );
+
+    console.log("Data fetched successfully!");
+
+    return {
+      categories,
+      discountedItems,
+    };
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
   }
-
-  const menuCategories: { [key: string]: MenuCategory } = {};
-
-  menuItems.forEach((item) => {
-    if (!menuCategories[item.category]) {
-      menuCategories[item.category] = {
-        title: item.category,
-        title_arab: item.category_arab,
-        items: [],
-        imageURL: item.imageURL, // Use the first item's image as the category image
-      };
-    }
-    menuCategories[item.category].items.push(item);
-  });
-
-  // Get the indexe collect // Get the indexe collection data. this collection has only one document.
-  const indexCollection = collection(db, INDEX_COLLECTION);
-  const indexSnapshot = await getDocs(indexCollection);
-  const indexData = indexSnapshot.docs[0].data();
-
-  // Convert the index data into a lookup object
-  // the format of the index is: [{"category_name": index_number}]
-  const categoryIndexMap: { [key: string]: number } = {};
-  Object.entries(indexData).forEach(([catName, indexNumber]) => {
-    categoryIndexMap[catName] = indexNumber as number;
-  });
-
-  // Turn the menuCategories object into an array
-  const categories = Object.values(menuCategories);
-
-  // Sort the categories based on the index lookup
-  categories.sort((a, b) => {
-    const indexA = categoryIndexMap[a.title] ?? Infinity;
-    const indexB = categoryIndexMap[b.title] ?? Infinity;
-    return indexA - indexB;
-  });
-
-  return categories;
 };

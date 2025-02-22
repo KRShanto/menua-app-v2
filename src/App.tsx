@@ -5,8 +5,17 @@ import MenuCart from "./components/MenuCart";
 import OrderHistory from "./components/OrderHistory";
 import Home from "./pages/Home";
 import Header from "./components/Header";
+import { useEffect } from "react";
+import { useDataStore } from "./stores/data";
 
 const App = () => {
+  const { fetchData } = useDataStore();
+
+  useEffect(() => {
+    // Fetch firebase data
+    fetchData();
+  }, [fetchData]);
+
   return (
     <Router>
       <Header />

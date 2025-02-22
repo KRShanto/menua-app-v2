@@ -1,5 +1,5 @@
 import { CartItem } from "@/types/cart";
-import { MenuItem } from "@/types/menu";
+import { MenuItem } from "@/lib/firebase";
 import { create } from "zustand";
 
 interface StoreState {

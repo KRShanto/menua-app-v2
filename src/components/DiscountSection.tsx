@@ -1,89 +1,20 @@
 import { FaFire, FaMinus, FaPlus, FaTags } from "react-icons/fa";
 import { GoPlus } from "react-icons/go";
 import BottomDrawer from "./BottomDrawer";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAddToCartStore } from "@/stores/useAddToCart";
-import {
-  db,
-  DISCOUNT_COLLECTION,
-  MENU_COLLECTION,
-  MenuItem,
-} from "@/lib/firebase";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { MenuItem } from "@/lib/firebase";
 import { useLang } from "@/lib/useLang";
+import { useDataStore } from "@/stores/data";
 
 export default function DiscountSection() {
+  const { discountItems } = useDataStore();
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { cart, increaseQuantity, decreaseQuantity } = useAddToCartStore();
-  const [discountData, setDiscountData] = useState<MenuItem[]>([]);
   const lang = useLang();
 
-  useEffect(() => {
-    const fetchDiscounts = async () => {
-      try {
-        const discountSnapshot = await getDocs(
-          collection(db, DISCOUNT_COLLECTION),
-        );
-        const discounts = discountSnapshot.docs.map((doc) => doc.data());
-
-        console.log("Discounts from discount section component: ", discounts);
-        console.log("length of discounts: ", discounts.length);
-
-        // Fetch all related menu items with discounts
-        const items = await Promise.all(
-          discounts.map(async (discount, index) => {
-            try {
-              console.log(`Processing discount ${index}: `, discount);
-
-              const itemSnapshot = await getDoc(
-                doc(db, MENU_COLLECTION, discount.itemId),
-              );
-              console.log(
-                `Item snapshot for discount ${index}: `,
-                itemSnapshot,
-              );
-
-              if (!itemSnapshot.exists()) {
-                console.error(
-                  `Item not found for discount ${index}: `,
-                  discount.itemId,
-                );
-                return null;
-              }
-
-              const menuItems = itemSnapshot.data() as MenuItem;
-              console.log(`Menu items for discount ${index}: `, menuItems);
-              menuItems.id = itemSnapshot.id;
-
-              // Add discount rate
-              menuItems.discountPercentage = discount.rate;
-
-              return menuItems;
-            } catch (error) {
-              console.error(`Error processing discount ${index}: `, error);
-              return null;
-            }
-          }),
-        );
-
-        // Filter out any null values
-        const validItems = items.filter((item) => item !== null);
-
-        // Set the discount data
-        setDiscountData(validItems);
-      } catch (error) {
-        console.error("Error fetching discounts: ", error);
-      }
-    };
-
-    fetchDiscounts();
-  }, []);
-
-  console.log("Discount data: ", discountData);
-
   const handleItemClick = (item: MenuItem) => {
-    console.log("Item ID: ", item.id);
     setSelectedItem(item);
     setDrawerOpen(true);
   };
@@ -104,7 +35,7 @@ export default function DiscountSection() {
 
         {/* Item List */}
         <ul className="mt-2 flex gap-3 overflow-x-scroll">
-          {discountData.map((item: MenuItem) => {
+          {discountItems.map((item: MenuItem) => {
             const itemCart = cart.find((catItem) => catItem.id === item.id);
             return (
               <li

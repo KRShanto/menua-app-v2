@@ -1,20 +1,11 @@
 import MenuCard from "./MenuCard";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { fetchMenuData, MenuCategory } from "@/lib/firebase";
+import { MenuCategory } from "@/lib/firebase";
+import { useDataStore } from "@/stores/data";
 
 export default function MenuView() {
   const navigate = useNavigate();
-  const [menuData, setMenuData] = useState<MenuCategory[]>([]);
-
-  useEffect(() => {
-    fetchMenuData().then((data) => {
-      const filteredData = data.filter(
-        (category) => !category.title.toLowerCase().includes("combo"),
-      );
-      setMenuData(filteredData);
-    });
-  }, []);
+  const { menuCategories } = useDataStore();
 
   const handleCategorySelect = (category: MenuCategory) => {
     navigate(`/category/${category.title}`);
@@ -24,14 +15,18 @@ export default function MenuView() {
     <div className="relative mt-4">
       <div className="container">
         <div className="flex flex-col gap-4 pb-4 pt-4">
-          {menuData.map((category) => (
-            <MenuCard
-              key={category.title}
-              {...category}
-              itemCount={category.items.length}
-              onClick={() => handleCategorySelect(category)}
-            />
-          ))}
+          {menuCategories
+            .filter(
+              (category) => !category.title.toLowerCase().includes("combo"),
+            )
+            .map((category) => (
+              <MenuCard
+                key={category.title}
+                {...category}
+                itemCount={category.items.length}
+                onClick={() => handleCategorySelect(category)}
+              />
+            ))}
         </div>
       </div>
     </div>
