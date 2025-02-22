@@ -1,4 +1,4 @@
-import { FaFire, FaTags } from "react-icons/fa";
+import { FaFire, FaMinus, FaPlus, FaTags } from "react-icons/fa";
 import { GoPlus } from "react-icons/go";
 import BottomDrawer from "./BottomDrawer";
 import { useState, useEffect } from "react";
@@ -7,12 +7,10 @@ import {
   db,
   DISCOUNT_COLLECTION,
   MENU_COLLECTION,
-  // storage,
   MenuItem,
 } from "@/lib/firebase";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { useLang } from "@/lib/useLang";
-// import { getDownloadURL, ref } from "firebase/storage";
 
 export default function DiscountSection() {
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
@@ -144,21 +142,18 @@ export default function DiscountSection() {
 
                 {/* Add button */}
                 {!itemCart ? (
-                  <button
-                    className="absolute right-3 top-[60%] flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black"
-                    // onClick={add}
-                  >
+                  <button className="absolute right-3 top-[60%] flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black">
                     {lang("Add", "إضافة")} <GoPlus />
                   </button>
                 ) : (
-                  <div className="absolute right-3 top-[40%] flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black">
+                  <div className="absolute right-3 top-[60%] flex items-center gap-3 rounded-full bg-[#D87E27] px-4 py-1 text-black">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         decreaseQuantity(item.id);
                       }}
                     >
-                      -
+                      <FaMinus size={8} />
                     </button>
                     <span>{itemCart.quantity}</span>
                     <button
@@ -167,7 +162,7 @@ export default function DiscountSection() {
                         increaseQuantity(item.id);
                       }}
                     >
-                      +
+                      <FaPlus size={8} />
                     </button>
                   </div>
                 )}
