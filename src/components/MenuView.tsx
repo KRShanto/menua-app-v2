@@ -21,7 +21,7 @@ export default function MenuView() {
   };
 
   return (
-    <div className="relative mt-4 h-screen overflow-y-auto">
+    <div className="relative mt-4">
       <div className="container">
         <div className="flex flex-col gap-4 pb-4 pt-4">
           {menuData.map((category) => (
