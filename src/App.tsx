@@ -1,8 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import ComboView from "./components/ComboView";
-import CategoryPage from "./components/CategoryPage";
-import MenuCart from "./components/MenuCart";
-import OrderHistory from "./components/OrderHistory";
+import CategoryPage from "./pages/CategoryPage";
+import MenuCart from "./pages/MenuCart";
+import OrderHistory from "./pages/OrderHistory";
 import Home from "./pages/Home";
 import Header from "./components/Header";
 import { useEffect } from "react";
@@ -21,7 +20,6 @@ const App = () => {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/combo" element={<ComboView />} />
         <Route path="/category/:categoryId" element={<CategoryPage />} />
         <Route path="/cart" element={<MenuCart />} />
         <Route path="/orderhistory" element={<OrderHistory />} />

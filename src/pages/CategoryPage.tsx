@@ -2,7 +2,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { MdDiscount } from "react-icons/md";
-import BottomDrawer from "./BottomDrawer";
+import BottomDrawer from "../components/BottomDrawer";
 import { MenuItem, MenuCategory } from "@/lib/firebase"; // Import the fetchMenuData function
 import { useAddToCartStore } from "@/stores/useAddToCart";
 import { GoPlus } from "react-icons/go";
