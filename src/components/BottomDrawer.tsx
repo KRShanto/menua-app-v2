@@ -20,13 +20,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
   const [showGoToCartButton, setShowGoToCartButton] = useState(false);
   const lang = useLang();
 
-  const {
-    cart,
-    addToCart,
-    increaseQuantity,
-    decreaseQuantity,
-    setShowToSlide,
-  } = useAddToCartStore();
+  const { cart, addToCart, setShowToSlide } = useAddToCartStore();
 
   const itemInCart = cart.find((cartItem) => cartItem.id === item?.id);
   const navigatetoCart = useNavigate();
@@ -139,8 +133,8 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
                       )}
                     </div>
                     <div className="rounded-xl px-2">
-                      {itemInCart ? (
-                        <div className="flex items-center rounded-full bg-[#D87E27] px-4 py-1 text-black">
+                      {/* {itemInCart ? (
+                        <div className="flex items-center rounded-full bg-[#D87E27] px-4 py-1 text-blue-500">
                           <button onClick={() => decreaseQuantity(item.id)}>
                             <LuMinus size={14} />
                           </button>
@@ -149,7 +143,8 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
                             <GoPlus size={16} />
                           </button>
                         </div>
-                      ) : itemQuantity === 0 ? (
+                      ) : */}
+                      {itemQuantity === 0 ? (
                         <button
                           className="flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black"
                           onClick={handleIncrement}
@@ -158,12 +153,12 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
                         </button>
                       ) : (
                         <div className="flex items-center rounded-full bg-[#D87E27] px-4 py-1 text-black">
-                          <button className="" onClick={handleDecrement}>
-                            <LuMinus size={14} />
+                          <button onClick={handleDecrement}>
+                            <LuMinus size={18} />
                           </button>
                           <span className="mx-2">{itemQuantity}</span>
                           <button onClick={handleIncrement}>
-                            <GoPlus size={16} />
+                            <GoPlus size={18} />
                           </button>
                         </div>
                       )}
