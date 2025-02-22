@@ -40,16 +40,13 @@ export default function MenuCart() {
                   <p>SR {item.price}</p>
                 </div>
 
-                <div className="flex gap-2 rounded-full bg-yellowBackground px-2 text-sm text-black">
+                <div className="flex gap-2 rounded-full bg-yellowBackground px-2 text-base text-black">
                   <button onClick={() => decreaseQuantity(item.id)}>
-                    <FaMinus size={6} />
+                    <FaMinus size={12} />
                   </button>
-                  <span>
-                    {cart.find((i) => i.id === item.id)?.quantity || 0}
-                  </span>
                   <span className="mx-2">{item.quantity}</span>
                   <button onClick={() => increaseQuantity(item.id)}>
-                    <FaPlus size={8} />
+                    <FaPlus size={12} />
                   </button>
                 </div>
               </div>

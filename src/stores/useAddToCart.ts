@@ -52,12 +52,17 @@ export const useAddToCartStore = create<StoreState>((set) => ({
   decreaseQuantity: (id) =>
     set((state) => {
       const updatedCart = state.cart
-        .map((item) =>
-          item.id === id && item.quantity > 1
-            ? { ...item, quantity: item.quantity - 1 }
-            : item,
-        )
-        .filter((item) => item.quantity > 0);
+        .map((item) => {
+          if (item.id === id) {
+            if (item.quantity > 1) {
+              return { ...item, quantity: item.quantity - 1 };
+            } else {
+              return null; // Mark for removal
+            }
+          }
+          return item;
+        })
+        .filter((item) => item !== null); // Remove items marked for removal
       saveCartToLocalStorage(updatedCart);
       return { cart: updatedCart };
     }),
