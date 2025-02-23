@@ -40,6 +40,7 @@ export interface MenuItem {
   discountId: string;
   likes: string;
   imageURL: string;
+  index?: number;
 }
 
 export interface MenuCategory {
@@ -145,6 +146,15 @@ export const fetchData = async (): Promise<FetchDataResult> => {
       return idxA - idxB;
     });
 
+    // Sort the items within each category by the optional index field
+    categories.forEach((category) => {
+      category.items.sort((a, b) => {
+        const idxA = a.index ?? Infinity;
+        const idxB = b.index ?? Infinity;
+        return idxA - idxB;
+      });
+    });
+
     // Build a separate array of discounted items only
     const discountedItems = menuItems.filter(
       (item) => item.discountPercentage > 0,
@@ -156,6 +166,8 @@ export const fetchData = async (): Promise<FetchDataResult> => {
       const idxB = discountIndexMap[b.discountId] ?? Infinity;
       return idxA - idxB;
     });
+
+    console.log("Categories:", categories);
 
     return {
       categories,
