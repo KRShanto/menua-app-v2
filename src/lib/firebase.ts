@@ -17,34 +17,13 @@ export const db = getFirestore(app);
 export const storage = getStorage(app);
 export const auth = getAuth();
 
-export const STORAGE_BASE = import.meta.env.PROD ? "production" : "development";
-
-// export const MENU_COLLECTION = import.meta.env.PROD
-//   ? "production__menu"
-//   : "development__menu";
 export const MENU_COLLECTION = "production__menu";
-export const MENU_IMAGES = `${STORAGE_BASE}/menu-images`;
-
-// export const DISCOUNT_COLLECTION = import.meta.env.PROD
-//   ? "production__discount"
-//   : "development__discount";
 export const DISCOUNT_COLLECTION = "production__discount";
-
-// export const MANAGER_COLLECTION = import.meta.env.PROD
-//   ? "production__manager"
-//   : "development__manager";
 export const MANAGER_COLLECTION = "production__manager";
 export const MANAGER_DEFAULT_IMAGE = "/user-image.png";
-
-// export const FEEDBACK_COLLECTION = import.meta.env.PROD
-//   ? "production__feedback"
-//   : "development__feedback";
 export const FEEDBACK_COLLECTION = "production__feedback";
-
-// export const INDEX_COLLECTION = import.meta.env.PROD
-//   ? "production__index"
-//   : "development__index";
-export const INDEX_COLLECTION = "production__index";
+export const INDEX_CATEGORY_COLLECTION = "production__index";
+export const INDEX_DISCOUNT_COLLECTION = "production__discount_index";
 
 export interface MenuItem {
   id: string;
@@ -58,6 +37,7 @@ export interface MenuItem {
   description_arab: string;
   discountedPrice: number;
   discountPercentage: number;
+  discountId: string;
   likes: string;
   imageURL: string;
 }
@@ -70,110 +50,112 @@ export interface MenuCategory {
 }
 
 export interface Discount {
+  id: string;
   itemId: string;
-  discountPercentage: number;
+  rate: number;
 }
 
-export interface Discount {
-  itemId: string;
-  rate: number; // You called it "discount.rate" in your old code
-}
-
-/** Structure for the combined fetch function’s return value */
 export interface FetchDataResult {
-  categories: MenuCategory[]; // Full categories with items (including discount info)
-  discountedItems: MenuItem[]; // Just the discounted items
-  menuItems: MenuItem[]; // All menu items (including discount info)
+  categories: MenuCategory[];
+  discountedItems: MenuItem[];
+  menuItems: MenuItem[];
 }
 
-/**
- * Fetches all menu items, merges in discount data, sorts categories by your index document,
- * and returns both the sorted categories and the discounted items in one shot.
- */
 export const fetchData = async (): Promise<FetchDataResult> => {
   try {
-    console.log("Fetching data...");
-
-    // 1) Fetch menu documents and discount documents in parallel
+    // Fetch menu and discount documents in parallel
     const [menuSnapshot, discountSnapshot] = await Promise.all([
       getDocs(collection(db, MENU_COLLECTION)),
       getDocs(collection(db, DISCOUNT_COLLECTION)),
     ]);
 
-    // 2) Convert menu docs into an array of MenuItem
+    // Convert menu docs into an array of MenuItem
     const menuItems: MenuItem[] = menuSnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     })) as MenuItem[];
 
-    // 3) Convert discount docs into an array of Discount
+    // Convert discount docs into an array of Discount
     const discounts: Discount[] = discountSnapshot.docs.map((doc) => ({
       ...doc.data(),
+      id: doc.id,
     })) as Discount[];
 
-    // 4) Build a map (key: itemId) => { rate }
+    // Build a map (key: itemId) => { rate }
     const discountMap: Record<string, Discount> = {};
-    for (const d of discounts) {
+    discounts.forEach((d) => {
       discountMap[d.itemId] = d;
-    }
+    });
 
-    // 5) Merge discount info into the menu items
-    for (const item of menuItems) {
+    // Merge discount info into the menu items
+    menuItems.forEach((item) => {
       const discountObj = discountMap[item.id];
+      item.discountId = discountObj?.id;
       if (discountObj) {
         item.discountPercentage = discountObj.rate;
         item.discountedPrice =
           item.price - (item.price * discountObj.rate) / 100;
       } else {
-        // Make sure these fields are set even if no discount
         item.discountPercentage = 0;
         item.discountedPrice = item.price;
       }
-    }
+    });
 
-    // 6) Create a dictionary of categories => { title, title_arab, items[], imageURL }
+    // Create a dictionary of categories
     const menuCategories: Record<string, MenuCategory> = {};
-    for (const item of menuItems) {
+    menuItems.forEach((item) => {
       if (!menuCategories[item.category]) {
         menuCategories[item.category] = {
           title: item.category,
           title_arab: item.category_arab,
           items: [],
-          // Just using the first item’s image as the category image
           imageURL: item.imageURL,
         };
       }
       menuCategories[item.category].items.push(item);
-    }
+    });
 
-    // 7) Fetch the category index doc to sort categories
-    //    (assuming you have only one doc in the INDEX_COLLECTION)
-    const indexSnapshot = await getDocs(collection(db, INDEX_COLLECTION));
+    // Fetch the category and discount index docs
+    const [indexSnapshot, discountIndexSnapshot] = await Promise.all([
+      getDocs(collection(db, INDEX_CATEGORY_COLLECTION)),
+      getDocs(collection(db, INDEX_DISCOUNT_COLLECTION)),
+    ]);
+
     const indexData = indexSnapshot.docs[0]?.data() || {};
+    const discountIndexData = discountIndexSnapshot.docs[0]?.data() || {};
 
-    // Convert the index data into a lookup object
-    // e.g. { "Burgers": 1, "Pizzas": 2, "Desserts": 3, ... }
+    // Convert the index data into lookup objects
     const categoryIndexMap: Record<string, number> = {};
-    for (const [catName, idx] of Object.entries(indexData)) {
+    Object.entries(indexData).forEach(([catName, idx]) => {
       categoryIndexMap[catName] = idx as number;
-    }
+    });
 
-    // 8) Turn the menuCategories dictionary into an array
+    const discountIndexMap: Record<string, number> = {};
+    Object.entries(discountIndexData).forEach(([itemId, idx]) => {
+      discountIndexMap[itemId] = idx as number;
+    });
+
+    // Turn the menuCategories dictionary into an array
     const categories = Object.values(menuCategories);
 
-    // 9) Sort the array by your index map, pushing unknown categories to the end
+    // Sort the categories array by the index map
     categories.sort((a, b) => {
       const idxA = categoryIndexMap[a.title] ?? Infinity;
       const idxB = categoryIndexMap[b.title] ?? Infinity;
       return idxA - idxB;
     });
 
-    // 10) Build a separate array of discounted items only
+    // Build a separate array of discounted items only
     const discountedItems = menuItems.filter(
       (item) => item.discountPercentage > 0,
     );
 
-    console.log("Data fetched successfully!");
+    // Sort the discounted items by the discount index map
+    discountedItems.sort((a, b) => {
+      const idxA = discountIndexMap[a.discountId] ?? Infinity;
+      const idxB = discountIndexMap[b.discountId] ?? Infinity;
+      return idxA - idxB;
+    });
 
     return {
       categories,
