@@ -3,12 +3,23 @@ import MenuCardSkeleton from "./MenuCardSkeleton";
 import { useNavigate } from "react-router-dom";
 import type { MenuCategory } from "@/lib/firebase";
 import { useDataStore } from "@/stores/data";
+import { useEffect } from "react";
 
 export default function MenuView() {
   const navigate = useNavigate();
   const { menuCategories, fetching } = useDataStore();
 
+  // Restore scroll position when component mounts
+  useEffect(() => {
+    const savedPosition = sessionStorage.getItem("menuScrollPosition");
+    if (savedPosition) {
+      window.scrollTo(0, parseInt(savedPosition, 10));
+    }
+  }, []);
+
   const handleCategorySelect = (category: MenuCategory) => {
+    // Save current scroll position before navigating
+    sessionStorage.setItem("menuScrollPosition", window.scrollY.toString());
     navigate(`/category/${category.title}`);
   };
 
