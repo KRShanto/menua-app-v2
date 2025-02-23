@@ -74,6 +74,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
         closable={false}
         open={open}
         className="rounded-t-2xl p-0"
+        height="50%"
         style={{ backgroundColor: "#F2E7D4", border: "none" }}
       >
         <FloatButton
@@ -84,7 +85,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
         >
           {lang("Close", "إغلاق")}
         </FloatButton>
-        <div className="-mt-2 mb-4 w-full">
+        <div className="w-full">
           {item ? (
             <div className="flex h-fit flex-col rounded-sm p-0">
               <div>
@@ -133,17 +134,6 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
                       )}
                     </div>
                     <div className="rounded-xl px-2">
-                      {/* {itemInCart ? (
-                        <div className="flex items-center rounded-full bg-[#D87E27] px-4 py-1 text-blue-500">
-                          <button onClick={() => decreaseQuantity(item.id)}>
-                            <LuMinus size={14} />
-                          </button>
-                          <span className="mx-2">{itemInCart.quantity}</span>
-                          <button onClick={() => increaseQuantity(item.id)}>
-                            <GoPlus size={16} />
-                          </button>
-                        </div>
-                      ) : */}
                       {itemQuantity === 0 ? (
                         <button
                           className="flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black"
@@ -166,7 +156,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
                   </div>
                 </div>
               </div>
-              <div className="flex justify-center px-4">
+              <div className="mt-5 flex justify-center px-4">
                 <button
                   className={`flex items-center justify-center rounded-lg ${
                     cartActivated ? "bg-[#D87E27]" : "bg-[#F2C5AE]"
