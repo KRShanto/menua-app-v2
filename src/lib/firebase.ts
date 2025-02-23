@@ -24,6 +24,7 @@ export const MANAGER_DEFAULT_IMAGE = "/user-image.png";
 export const FEEDBACK_COLLECTION = "production__feedback";
 export const INDEX_CATEGORY_COLLECTION = "production__index";
 export const INDEX_DISCOUNT_COLLECTION = "production__discount_index";
+export const CATEGORY_IMAGE_COLLECTION = "production__category_images";
 
 export interface MenuItem {
   id: string;
@@ -61,6 +62,22 @@ export interface FetchDataResult {
   discountedItems: MenuItem[];
   menuItems: MenuItem[];
 }
+
+export const fetchCategoryImages = async (): Promise<
+  Record<string, string>
+> => {
+  try {
+    const categoryImageSnapshot = await getDocs(
+      collection(db, CATEGORY_IMAGE_COLLECTION),
+    );
+    const categoryImagesDoc = categoryImageSnapshot.docs[0];
+    const categoryImages: Record<string, string> = categoryImagesDoc.data();
+    return categoryImages;
+  } catch (error) {
+    console.error("Error fetching category images:", error);
+    throw error;
+  }
+};
 
 export const fetchData = async (): Promise<FetchDataResult> => {
   try {
@@ -102,6 +119,9 @@ export const fetchData = async (): Promise<FetchDataResult> => {
       }
     });
 
+    // Fetch category images
+    const categoryImages = await fetchCategoryImages();
+
     // Create a dictionary of categories
     const menuCategories: Record<string, MenuCategory> = {};
     menuItems.forEach((item) => {
@@ -110,7 +130,7 @@ export const fetchData = async (): Promise<FetchDataResult> => {
           title: item.category,
           title_arab: item.category_arab,
           items: [],
-          imageURL: item.imageURL,
+          imageURL: categoryImages[item.category] || item.imageURL,
         };
       }
       menuCategories[item.category].items.push(item);
