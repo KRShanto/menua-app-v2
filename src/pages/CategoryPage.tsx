@@ -56,6 +56,7 @@ export default function CategoryPage() {
             <div
               key={item.id}
               className="group relative flex items-center gap-3 overflow-hidden rounded-lg bg-[#2B2A2C] p-2"
+              onClick={() => handleItemClick(item)}
             >
               <div className="relative h-16 w-20 flex-shrink-0">
                 <img
@@ -94,14 +95,14 @@ export default function CategoryPage() {
                   {!itemCart ? (
                     <button
                       className="flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black"
-                      onClick={() => handleItemClick(item)}
+                      // onClick={() => handleItemClick(item)}
                     >
                       {lang("Add", "إضافة")} <GoPlus size={16} />
                     </button>
                   ) : (
                     <button
                       className="flex items-center rounded-full bg-[#D87E27] px-4 py-1 text-black"
-                      onClick={() => handleItemClick(item)}
+                      // onClick={() => handleItemClick(item)}
                     >
                       <LuMinus size={14} />
                       <span className="mx-2">{itemCart.quantity}</span>
