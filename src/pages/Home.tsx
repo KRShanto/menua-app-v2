@@ -3,6 +3,7 @@ import DiscountSection from "@/components/DiscountSection";
 import HomeNavigation from "@/components/HomeNavigation";
 import MenuView from "@/components/MenuView";
 import SplashScreen from "@/components/SplashScreen";
+import { useSplashLoadingStore } from "@/stores/splashLoading";
 import { ViewType } from "@/types/menu";
 import { useEffect, useState } from "react";
 
@@ -13,17 +14,19 @@ export default function Home() {
     setActiveView(view);
   };
 
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
+  const { isLoading, setLoading } = useSplashLoadingStore();
 
   useEffect(() => {
     const timer = setTimeout(() => {
+      // setLoading(false);
       setLoading(false);
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [setLoading]);
 
-  if (loading) {
+  if (isLoading) {
     return <SplashScreen />;
   }
 
