@@ -34,6 +34,8 @@ export default function CategoryPage() {
     setDrawerOpen(false);
   };
 
+  console.log("Menu categories", menuCategories);
+
   return (
     <div>
       <div className="relative">
@@ -54,7 +56,6 @@ export default function CategoryPage() {
             <div
               key={item.id}
               className="group relative flex items-center gap-3 overflow-hidden rounded-lg bg-[#2B2A2C] p-2"
-              // onClick={() => handleItemClick(item)}
             >
               <div className="relative h-16 w-20 flex-shrink-0">
                 <img
@@ -64,7 +65,7 @@ export default function CategoryPage() {
                   height={80}
                   className="h-16 rounded-lg object-cover"
                 />
-                {item.discountPercentage && (
+                {item.discountPercentage > 0 && (
                   <div className="absolute left-0 top-0 rounded-full bg-foregroundColor px-1.5 py-0.5 text-xs text-white">
                     <div className="z-10 inline-flex items-center gap-1 text-black">
                       <MdDiscount /> {item.discountPercentage}%{" "}
@@ -82,9 +83,10 @@ export default function CategoryPage() {
                 </div>
                 <div className="mt-2 text-sm text-primaryText">
                   SR {item.discountedPrice || item.price}{" "}
-                  {item.discountedPrice && (
-                    <span className="line-through">SR {item.price}</span>
-                  )}
+                  {item.discountedPrice &&
+                    item.discountedPrice !== item.price && (
+                      <span className="line-through">SR {item.price}</span>
+                    )}
                 </div>
               </div>
               <div className="flex flex-col gap-6">
