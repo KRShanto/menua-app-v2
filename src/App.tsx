@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Header from "./components/Header";
 import { useEffect } from "react";
 import { useDataStore } from "./stores/data";
+import { Analytics } from "@vercel/analytics/react";
 
 const App = () => {
   const { fetchData } = useDataStore();
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/cart" element={<MenuCart />} />
         <Route path="/orderhistory" element={<OrderHistory />} />
       </Routes>
+      <Analytics />
     </Router>
   );
 };
