@@ -37,7 +37,15 @@ export default function MenuCart() {
               <div className="flex w-full items-center justify-between">
                 <div>
                   <h3>{lang(item.name, item.name_arab)}</h3>
-                  <p>SR {item.price}</p>
+                  <div className="mt-2 text-sm text-primaryText">
+                    SR {item.discountedPrice || item.price}
+                    {item.discountedPrice &&
+                      item.discountedPrice !== item.price && (
+                        <span className="ml-3 text-xs line-through">
+                          SR {item.price}
+                        </span>
+                      )}
+                  </div>
                 </div>
 
                 <div className="flex gap-2 rounded-full bg-yellowBackground px-2 text-base text-black">

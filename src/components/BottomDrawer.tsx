@@ -55,6 +55,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
         price: item.price,
         image: item.imageURL,
         quantity: itemQuantity,
+        discountedPrice: item.discountPercentage,
       });
       setShowToSlide();
       setShowGoToCartButton(true);
