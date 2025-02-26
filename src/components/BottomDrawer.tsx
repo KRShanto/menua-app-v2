@@ -75,7 +75,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
         closable={false}
         open={open}
         className="rounded-t-2xl p-0"
-        height="50%"
+        height="60%"
         style={{ backgroundColor: "#F2E7D4", border: "none" }}
       >
         <FloatButton
@@ -174,7 +174,7 @@ const BottomDrawer: React.FC<BottomDrawerProps> = ({ item, open, onClose }) => {
         </div>
       </Drawer>
       {showGoToCartButton && (
-        <div className="fixed bottom-0 left-0 right-0 z-20 flex justify-center p-4">
+        <div className="fixed bottom-10 left-0 right-0 z-20 flex justify-center p-4">
           <button
             className="flex w-[340px] items-center justify-center rounded-lg bg-[#D87E27] py-3 text-sm text-[#F2E7D4]"
             onClick={() => {
