@@ -34,8 +34,6 @@ export default function CategoryPage() {
     setDrawerOpen(false);
   };
 
-  console.log("Menu categories", menuCategories);
-
   return (
     <div>
       <div className="relative">

@@ -187,8 +187,6 @@ export const fetchData = async (): Promise<FetchDataResult> => {
       return idxA - idxB;
     });
 
-    console.log("Categories:", categories);
-
     return {
       categories,
       discountedItems,

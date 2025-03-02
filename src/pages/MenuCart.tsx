@@ -39,7 +39,7 @@ export default function MenuCart() {
                   <h3>{lang(item.name, item.name_arab)}</h3>
                   <div className="mt-2 text-sm text-primaryText">
                     SR {item.discountedPrice || item.price}
-                    {item.discountedPrice &&
+                    {item.discountedPrice !== 0 &&
                       item.discountedPrice !== item.price && (
                         <span className="ml-3 text-xs line-through">
                           SR {item.price}
