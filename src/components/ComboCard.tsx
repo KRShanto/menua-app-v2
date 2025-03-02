@@ -24,7 +24,10 @@ export default function ComboCard({ item }: { item: MenuItem }) {
 
   return (
     <div>
-      <div className="flex flex-col rounded-sm border-b border-gray-800 shadow-md">
+      <div
+        className="flex flex-col rounded-sm border-b border-gray-800 shadow-md"
+        onClick={() => handleItemClick(item)}
+      >
         <div>
           <img
             src={item.imageURL || "/placeholder.svg"}
@@ -54,17 +57,11 @@ export default function ComboCard({ item }: { item: MenuItem }) {
             <div className="flex justify-end gap-6">
               <div>
                 {!itemCart ? (
-                  <button
-                    className="flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black"
-                    onClick={() => handleItemClick(item)}
-                  >
+                  <button className="flex items-center gap-1 rounded-full bg-[#D87E27] px-4 py-1 text-black">
                     {lang("Add", "إضافة")} <GoPlus size={16} />
                   </button>
                 ) : (
-                  <button
-                    className="inline-flex items-center rounded-full bg-[#D87E27] px-4 py-1 text-black"
-                    onClick={() => handleItemClick(item)}
-                  >
+                  <button className="inline-flex items-center rounded-full bg-[#D87E27] px-4 py-1 text-black">
                     <LuMinus size={14} />
                     <span className="mx-2">{itemCart.quantity}</span>
                     <GoPlus size={16} />
