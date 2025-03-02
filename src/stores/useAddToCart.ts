@@ -14,17 +14,17 @@ interface StoreState {
   clearCart: () => void;
 }
 
-const saveCartToLocalStorage = (cart: CartItem[]) => {
-  localStorage.setItem("cart", JSON.stringify(cart));
+const saveCartToSessionStorage = (cart: CartItem[]) => {
+  sessionStorage.setItem("cart", JSON.stringify(cart));
 };
 
-const loadCartFromLocalStorage = (): CartItem[] => {
-  const cart = localStorage.getItem("cart");
+const loadCartFromSessionStorage = (): CartItem[] => {
+  const cart = sessionStorage.getItem("cart");
   return cart ? JSON.parse(cart) : [];
 };
 
 export const useAddToCartStore = create<StoreState>((set) => ({
-  cart: loadCartFromLocalStorage(),
+  cart: loadCartFromSessionStorage(),
   showToSlide: false,
   selectedItem: null,
   addToCart: (item) =>
@@ -38,7 +38,7 @@ export const useAddToCartStore = create<StoreState>((set) => ({
       } else {
         updatedCart = [...state.cart, { ...item, quantity: item.quantity }];
       }
-      saveCartToLocalStorage(updatedCart);
+      saveCartToSessionStorage(updatedCart);
       return { cart: updatedCart };
     }),
   increaseQuantity: (id) =>
@@ -46,7 +46,7 @@ export const useAddToCartStore = create<StoreState>((set) => ({
       const updatedCart = state.cart.map((item) =>
         item.id === id ? { ...item, quantity: item.quantity + 1 } : item,
       );
-      saveCartToLocalStorage(updatedCart);
+      saveCartToSessionStorage(updatedCart);
       return { cart: updatedCart };
     }),
   decreaseQuantity: (id) =>
@@ -63,14 +63,14 @@ export const useAddToCartStore = create<StoreState>((set) => ({
           return item;
         })
         .filter((item) => item !== null); // Remove items marked for removal
-      saveCartToLocalStorage(updatedCart);
+      saveCartToSessionStorage(updatedCart);
       return { cart: updatedCart };
     }),
   setShowToSlide: () => set({ showToSlide: true }),
   setSelectedItem: (item) => set({ selectedItem: item }),
   clearCart: () =>
     set(() => {
-      localStorage.removeItem("cart");
+      sessionStorage.removeItem("cart");
       return { cart: [] };
     }),
 }));
