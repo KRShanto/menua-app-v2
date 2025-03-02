@@ -92,7 +92,7 @@ export default function Navbar() {
       id: "contact-us",
       icon: FaPhoneAlt,
       label: lang("Contact Us", "اتصل بنا"),
-      content: <p>+966 55094 2073</p>,
+      content: <p>+059 230 4807</p>,
     },
     {
       id: "location",
@@ -100,8 +100,12 @@ export default function Navbar() {
       label: lang("Location", "الموقع"),
       content: (
         <div className="space-y-2 pl-4">
-          <p>123 Restaurant Street</p>
-          <p>City, Country</p>
+          <p>
+            {lang(
+              "Ash Shati Dist, Rekaz complex, Near Alsodfa roundabout",
+              "حي الشاطئ، مجمع ريكاز، بجوار دوار الصدفه",
+            )}
+          </p>
         </div>
       ),
     },
