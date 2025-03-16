@@ -6,6 +6,8 @@ import { PostHogProvider } from "posthog-js/react";
 
 const options = {
   api_host: import.meta.env.VITE_POSTHOG_HOST,
+  capture_pageleave: true,
+  capture_pageview: true,
 };
 
 createRoot(document.getElementById("root")!).render(
