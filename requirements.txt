@@ -1,0 +1,6 @@
+openai
+python-dotenv
+requests
+pygame
+SpeechRecognition
+pyaudio  # Required for microphone input 

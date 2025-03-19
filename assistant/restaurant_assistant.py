@@ -6,12 +6,27 @@ import sys
 from dotenv import load_dotenv
 import requests
 from requests.exceptions import RequestException
+import pygame
+import tempfile
+import speech_recognition as sr
+import threading
+import time
 
 # Load environment variables from .env file
 load_dotenv()
 
 # Initialize OpenAI client
 openai.api_key = os.getenv("OPENAI_API_KEY")
+
+# Initialize ElevenLabs API
+ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
+ELEVENLABS_VOICE_ID = os.getenv("ELEVENLABS_VOICE_ID", "21m00Tcm4TlvDq8ikWAM")  # Default to "Rachel" voice
+
+# Initialize pygame for audio playback
+pygame.mixer.init()
+
+# Initialize speech recognition
+recognizer = sr.Recognizer()
 
 # Load environment variables
 FIREBASE_API_KEY = os.getenv('FIREBASE_API_KEY')
@@ -333,18 +348,30 @@ def create_system_prompt(menu_data):
     """Create the system prompt with menu information"""
     menu_context = format_menu_for_context(menu_data)
     
-    system_prompt = f"""You are an AI assistant acting as a friendly and helpful restaurant server named Alex.
+    system_prompt = f"""You are an AI assistant acting as a friendly and helpful restaurant server named Rachel.
 You have a warm, welcoming personality and are knowledgeable about all menu items.
 
 {menu_context}
 
-When customers ask about specials, highlight the discounted items.
-If asked for recommendations, suggest popular items or personal favorites from the menu.
-You can explain ingredients, preparation methods, and accommodate dietary restrictions.
-Be conversational and personable, as if you're actually serving customers at a restaurant.
-If asked about items not on the menu, politely explain they're not available but suggest alternatives.
-Always maintain a positive, helpful attitude and thank customers for their interest.
-Keep your responses concise and natural, like a real conversation. Avoid using markdown formatting.
+CONVERSATION STYLE GUIDELINES:
+1. Keep responses brief and conversational, like a real server would speak
+2. Break up long responses into shorter sentences
+3. When listing menu items, mention only 2-3 relevant items at a time
+4. If there are more options, ask if the customer would like to hear more
+5. Use natural transitions like "We also have..." or "Would you like to hear about..."
+6. Avoid listing prices unless specifically asked
+7. For specials, focus on 1-2 highlights rather than listing all discounted items
+
+Example responses:
+- "Today's special is our Grilled Salmon with lemon butter sauce. Would you like to hear more about it?"
+- "For appetizers, I'd recommend our Hummus or Mozzarella Sticks. We also have other options if those don't interest you."
+- "Let me tell you about our most popular dessert - it's our rich Chocolate Cake with ganache."
+
+When customers ask about specials, highlight just 1-2 discounted items initially.
+If asked for recommendations, suggest 2-3 items maximum at a time.
+Be conversational and personable, as if you're actually speaking to customers at a restaurant.
+If asked about items not on the menu, politely explain they're not available and suggest one alternative.
+Always maintain a positive, helpful attitude and keep responses concise.
 
 IMPORTANT: Only respond to questions related to the restaurant, menu items, food, dining experience, or restaurant services.
 If asked about any off-topic subjects (politics, news, personal advice, technology, etc.), respond with:
@@ -416,6 +443,94 @@ def handle_exit(signal, frame):
     print("\n\nThank you for dining with us today! It was a pleasure serving you. We hope to see you again soon. Have a wonderful day!")
     sys.exit(0)
 
+def text_to_speech(text):
+    """Convert text to speech using ElevenLabs API and play it"""
+    try:
+        # ElevenLabs API endpoint
+        url = f"https://api.elevenlabs.io/v1/text-to-speech/{ELEVENLABS_VOICE_ID}"
+        
+        # Headers for the API request
+        headers = {
+            "Accept": "audio/mpeg",
+            "Content-Type": "application/json",
+            "xi-api-key": ELEVENLABS_API_KEY
+        }
+        
+        # Request body
+        data = {
+            "text": text,
+            "model_id": "eleven_monolingual_v1",
+            "voice_settings": {
+                "stability": 0.75,
+                "similarity_boost": 0.75
+            }
+        }
+        
+        # Make the API request
+        response = requests.post(url, json=data, headers=headers)
+        response.raise_for_status()
+        
+        # Save the audio to a temporary file
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.mp3') as temp_file:
+            temp_file.write(response.content)
+            temp_path = temp_file.name
+        
+        try:
+            # Stop any currently playing audio
+            pygame.mixer.music.stop()
+            pygame.mixer.music.unload()
+            
+            # Play the audio
+            pygame.mixer.music.load(temp_path)
+            pygame.mixer.music.play()
+            
+            # Wait for the audio to finish playing
+            while pygame.mixer.music.get_busy():
+                pygame.time.Clock().tick(10)
+            
+            # Unload the music after playing
+            pygame.mixer.music.unload()
+            
+        finally:
+            # Clean up the temporary file
+            try:
+                os.unlink(temp_path)
+            except Exception:
+                pass  # Ignore errors during cleanup
+        
+    except Exception as e:
+        print(f"\nError generating or playing speech: {str(e)}")
+
+def listen_for_speech():
+    """Listen for speech input and convert it to text"""
+    with sr.Microphone() as source:
+        print("\nListening... (speak now)")
+        
+        # Adjust for ambient noise
+        recognizer.adjust_for_ambient_noise(source, duration=0.5)
+        
+        try:
+            # Listen for audio input
+            audio = recognizer.listen(source, timeout=10, phrase_time_limit=10)
+            print("Processing your speech...")
+            
+            # Convert speech to text
+            text = recognizer.recognize_google(audio)
+            return text
+            
+        except sr.WaitTimeoutError:
+            print("\nNo speech detected within timeout period.")
+            return None
+        except sr.UnknownValueError:
+            print("\nCould not understand the audio.")
+            return None
+        except sr.RequestError as e:
+            print(f"\nCould not request results; {str(e)}")
+            return None
+        except Exception as e:
+            print(f"\nError during speech recognition: {str(e)}")
+            return None
+
 def main():
     """Main function to run the assistant"""
     # Register signal handler for Ctrl+C
@@ -426,23 +541,76 @@ def main():
     # Initialize menu data at startup
     initialize_menu_data()
     
-    print("\nWelcome to our restaurant! I'm Alex, your virtual server.")
+    # Check if voice is available
+    voice_enabled = bool(ELEVENLABS_API_KEY)
+    if voice_enabled:
+        print("\nVoice output is enabled! 🎙️")
+        print("Type 'voice off' to disable voice or 'voice on' to enable it")
+        print("Say 'voice off' or 'voice on' to control voice output")
+        print("Say 'type' or press Enter to switch to typing mode")
+    else:
+        print("\nVoice output is disabled. To enable it, set ELEVENLABS_API_KEY in your .env file")
+    
+    print("\nWelcome to our restaurant! I'm Rachel, your virtual server.")
     print("Type 'exit' to quit or 'clear' to start a new conversation")
+    print("Press Enter without typing to switch between voice and typing modes")
+    
+    # Voice state
+    voice_active = voice_enabled
+    voice_input_mode = True if voice_enabled else False
     
     while True:
         try:
-            user_input = input("\nYou: ")
+            # Get user input based on mode
+            if voice_input_mode and voice_enabled:
+                user_input = listen_for_speech()
+                if user_input:
+                    print(f"\nYou said: {user_input}")
+                else:
+                    continue
+            else:
+                user_input = input("\nYou: ")
+                # Empty input toggles voice input mode if voice is enabled
+                if not user_input and voice_enabled:
+                    voice_input_mode = not voice_input_mode
+                    print(f"\nSwitched to {'voice' if voice_input_mode else 'typing'} input mode")
+                    continue
             
-            if user_input.lower() == 'exit':
-                print("\nThank you for dining with us today! It was a pleasure serving you. We hope to see you again soon. Have a wonderful day!")
+            # Handle commands
+            if user_input and user_input.lower() == 'exit':
+                farewell = "Thank you for dining with us today! It was a pleasure serving you. We hope to see you again soon. Have a wonderful day!"
+                print(f"\n{farewell}")
+                if voice_active and voice_enabled:
+                    text_to_speech(farewell)
                 break
-            elif user_input.lower() == 'clear':
+            elif user_input and user_input.lower() == 'clear':
                 clear_conversation()
                 print("Started a new conversation.")
                 continue
+            elif user_input and user_input.lower() in ['voice off', 'voice disable'] and voice_enabled:
+                voice_active = False
+                print("Voice output disabled.")
+                continue
+            elif user_input and user_input.lower() in ['voice on', 'voice enable'] and voice_enabled:
+                voice_active = True
+                print("Voice output enabled.")
+                continue
+            elif user_input and user_input.lower() == 'type':
+                voice_input_mode = False
+                print("\nSwitched to typing mode")
+                continue
             
+            # Skip empty input
+            if not user_input:
+                continue
+            
+            # Get response from assistant
             response = chat_with_assistant(user_input)
-            print(f"\nAlex: {response}")
+            print(f"\nRachel: {response}")
+            
+            # Handle voice output based on state
+            if voice_active and voice_enabled:
+                text_to_speech(response)
         
         except KeyboardInterrupt:
             handle_exit(None, None)
