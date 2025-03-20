@@ -17,6 +17,7 @@ load_dotenv()
 
 # Initialize OpenAI client
 openai.api_key = os.getenv("OPENAI_API_KEY")
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
 
 # Initialize ElevenLabs API
 ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
@@ -407,7 +408,7 @@ def chat_with_assistant(user_input):
     # Get response from OpenAI
     try:
         response = openai.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model=OPENAI_MODEL,
             messages=conversation_history,
             max_tokens=500,
             temperature=0.7
