@@ -4,6 +4,7 @@ import MenuCart from "./pages/MenuCart";
 import OrderHistory from "./pages/OrderHistory";
 import Home from "./pages/Home";
 import Header from "./components/Header";
+import PaymentNotDone from "./components/PaymentNotDone";
 import { useEffect } from "react";
 import { useDataStore } from "./stores/data";
 import { Analytics } from "@vercel/analytics/react";
@@ -11,11 +12,16 @@ import Footer from "./components/Footer";
 
 const App = () => {
   const { fetchData } = useDataStore();
+  const showPaymentNotDone = true;
 
   useEffect(() => {
     // Fetch firebase data
     fetchData();
   }, [fetchData]);
+
+  if (showPaymentNotDone) {
+    return <PaymentNotDone />;
+  }
 
   return (
     <Router>
