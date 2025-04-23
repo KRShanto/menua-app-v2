@@ -12,7 +12,8 @@ import Footer from "./components/Footer";
 
 const App = () => {
   const { fetchData } = useDataStore();
-  const showPaymentNotDone = false;
+  const showPaymentNotDone =
+    import.meta.env.VITE_SHOW_PAYMENT_NOT_DONE === "true";
 
   useEffect(() => {
     // Fetch firebase data
