@@ -12,7 +12,7 @@ import Footer from "./components/Footer";
 
 const App = () => {
   const { fetchData } = useDataStore();
-  const showPaymentNotDone = true;
+  const showPaymentNotDone = false;
 
   useEffect(() => {
     // Fetch firebase data
